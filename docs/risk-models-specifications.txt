@@ -1,0 +1,92 @@
+=======================================================================
+SPECIFICATION: CONTRACTOR FINANCIAL RISK MODELS
+=======================================================================
+
+SCOPE
+The system implements three financial risk assessment models to evaluate
+the probability of bankruptcy or financial distress of a contractor.
+
+1. DOMAIN INPUT MODEL (FinancialStatement)
+   All models require the following data points:
+- TotalAssets
+- TotalLiabilities
+- CurrentAssets
+- CurrentLiabilities
+- WorkingCapital
+- RetainedEarnings
+- EBIT
+- MarketValueEquity
+- BookValueEquity
+- Sales
+- NetIncome
+- PreviousNetIncome
+- FundsFromOperations
+- GNPPriceIndex
+
+=======================================================================
+MODEL 1: ALTMAN Z-SCORE (ORIGINAL)
+=======================================================================
+PURPOSE: Bankruptcy prediction for public manufacturing companies.
+
+RATIOS:
+X1 = WorkingCapital / TotalAssets
+X2 = RetainedEarnings / TotalAssets
+X3 = EBIT / TotalAssets
+X4 = MarketValueEquity / TotalLiabilities
+X5 = Sales / TotalAssets
+
+FORMULA:
+Z = 1.2 * X1 + 1.4 * X2 + 3.3 * X3 + 0.6 * X4 + 1.0 * X5
+
+RISK ZONES:
+- SAFE ZONE     : Z > 2.99
+- GREY ZONE     : 1.81 <= Z <= 2.99
+- DISTRESS ZONE : Z < 1.81
+
+=======================================================================
+MODEL 2: ALTMAN Z''-SCORE (DOUBLE PRIME)
+=======================================================================
+PURPOSE: Risk assessment for private, non-manufacturing companies.
+
+RATIOS:
+X1 = WorkingCapital / TotalAssets
+X2 = RetainedEarnings / TotalAssets
+X3 = EBIT / TotalAssets
+X4 = BookValueEquity / TotalLiabilities
+
+FORMULA:
+Z'' = 6.56 * X1 + 3.26 * X2 + 6.72 * X3 + 1.05 * X4
+
+RISK ZONES:
+- SAFE ZONE     : Z'' > 2.60
+- GREY ZONE     : 1.10 <= Z'' <= 2.60
+- DISTRESS ZONE : Z'' < 1.10
+
+=======================================================================
+MODEL 3: OHLSON O-SCORE
+=======================================================================
+PURPOSE: Probabilistic model using logistic regression to predict bankruptcy.
+
+DERIVED RATIOS:
+SIZE = log10(TotalAssets / GNPPriceIndex)
+TLTA = TotalLiabilities / TotalAssets
+WCTA = WorkingCapital / TotalAssets
+CLCA = CurrentLiabilities / CurrentAssets
+NITA = NetIncome / TotalAssets
+FUTL = FundsFromOperations / TotalLiabilities
+
+BINARY INDICATORS:
+INTWO = 1.0 if (NetIncome < 0 AND PreviousNetIncome < 0), else 0.0
+OENEG = 1.0 if (TotalLiabilities > TotalAssets), else 0.0
+
+FORMULA:
+O = -1.32 - 0.407 * SIZE + 6.03 * TLTA - 1.43 * WCTA + 0.0757 * CLCA
+- 2.37 * NITA - 1.83 * FUTL + 0.285 * INTWO - 1.72 * OENEG
+
+PROBABILITY OF BANKRUPTCY:
+P = 1 / (1 + e^-O)
+
+RISK ZONES (Probability):
+- SAFE ZONE     : P < 0.20
+- GREY ZONE     : 0.20 <= P <= 0.50
+- DISTRESS ZONE : P > 0.50
