@@ -1,4 +1,5 @@
 ﻿using CRAS.Domain.Entities;
+using CRAS.Domain.Models;
 
 namespace CRAS.Domain.Interfaces;
 
@@ -16,6 +17,6 @@ public interface IRiskModel
     ///     Calculates the numerical risk score based on the provided financial statement.
     /// </summary>
     /// <param name="financialStatement">The financial data of the contractor used for the calculation.</param>
-    /// <returns>A decimal value representing the calculated risk score or probability.</returns>
-    decimal CalculateRisk(FinancialStatement financialStatement);
+    /// <returns>A RiskResult object containing the raw score, categorized risk level, and interpretation.</returns>
+    RiskResult CalculateRisk(FinancialStatement financialStatement);
 }
