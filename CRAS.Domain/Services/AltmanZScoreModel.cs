@@ -7,9 +7,11 @@ namespace CRAS.Domain.Services;
 
 /// <summary>
 ///     Implements the original Altman Z-Score financial risk model.
+/// </summary>
+/// <remarks>
 ///     This model is designed primarily to predict the probability of bankruptcy
 ///     for public manufacturing companies based on five specific financial ratios.
-/// </summary>
+/// </remarks>
 public class AltmanZScoreModel : IRiskModel
 {
     /// <summary>
@@ -21,22 +23,13 @@ public class AltmanZScoreModel : IRiskModel
     ///     Calculates the Altman Z-Score and determines the corresponding risk level.
     /// </summary>
     /// <param name="statement">The financial statement containing the necessary data points.</param>
-    /// <returns>
-    ///     A <see cref="RiskResult"/> containing the calculated score, categorized risk level,
-    ///     and a brief interpretation. Returns a default distress result if essential data
-    ///     (assets or liabilities) is zero to prevent division by zero exceptions.
-    /// </returns>
+    /// <returns>A <see cref="RiskResult" /> containing the calculated score and risk level.</returns>
+    /// <exception cref="ArgumentException">Thrown when essential denominator data is zero.</exception>
     public RiskResult CalculateRisk(FinancialStatement statement)
     {
         if (statement.TotalAssets == 0m || statement.TotalLiabilities == 0m)
         {
-            return new RiskResult
-            {
-                Model = ModelName,
-                Score = 0m,
-                RiskLevel = RiskLevel.Distress,
-                Interpretation = "Invalid data: Assets or Liabilities cannot be zero."
-            };
+            throw new ArgumentException("Invalid financial data: TotalAssets and TotalLiabilities cannot be zero.");
         }
 
         var x1 = statement.WorkingCapital / statement.TotalAssets;
