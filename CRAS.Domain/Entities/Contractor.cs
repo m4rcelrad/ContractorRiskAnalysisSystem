@@ -48,4 +48,9 @@ public class Contractor
 
         return sum % 11 == cleaned[9] - '0';
     }
+
+    /// <summary>
+    ///     Gets the collection of invoices associated with this contractor.
+    /// </summary>
+    public ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
 }
