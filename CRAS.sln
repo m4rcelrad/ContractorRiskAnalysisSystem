@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRAS.Infrastructure", "CRAS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRAS.Api", "CRAS.Api\CRAS.Api.csproj", "{F32362C4-8BBA-4B99-9566-6BEF4230247B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRAS.Tests", "CRAS.Tests\CRAS.Tests.csproj", "{44CBAD7F-626D-4F73-BD15-B411FEB0F513}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,18 @@ Global
 		{F32362C4-8BBA-4B99-9566-6BEF4230247B}.Release|x64.Build.0 = Release|Any CPU
 		{F32362C4-8BBA-4B99-9566-6BEF4230247B}.Release|x86.ActiveCfg = Release|Any CPU
 		{F32362C4-8BBA-4B99-9566-6BEF4230247B}.Release|x86.Build.0 = Release|Any CPU
+		{44CBAD7F-626D-4F73-BD15-B411FEB0F513}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44CBAD7F-626D-4F73-BD15-B411FEB0F513}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44CBAD7F-626D-4F73-BD15-B411FEB0F513}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{44CBAD7F-626D-4F73-BD15-B411FEB0F513}.Debug|x64.Build.0 = Debug|Any CPU
+		{44CBAD7F-626D-4F73-BD15-B411FEB0F513}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{44CBAD7F-626D-4F73-BD15-B411FEB0F513}.Debug|x86.Build.0 = Debug|Any CPU
+		{44CBAD7F-626D-4F73-BD15-B411FEB0F513}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44CBAD7F-626D-4F73-BD15-B411FEB0F513}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44CBAD7F-626D-4F73-BD15-B411FEB0F513}.Release|x64.ActiveCfg = Release|Any CPU
+		{44CBAD7F-626D-4F73-BD15-B411FEB0F513}.Release|x64.Build.0 = Release|Any CPU
+		{44CBAD7F-626D-4F73-BD15-B411FEB0F513}.Release|x86.ActiveCfg = Release|Any CPU
+		{44CBAD7F-626D-4F73-BD15-B411FEB0F513}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
