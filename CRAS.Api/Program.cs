@@ -1,5 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using CRAS.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace CRAS.Api;
 

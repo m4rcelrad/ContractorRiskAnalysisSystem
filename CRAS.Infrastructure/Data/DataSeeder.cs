@@ -14,10 +14,7 @@ public static class DataSeeder
     /// <param name="context">The database context used to interact with the underlying database.</param>
     public static void Seed(AppDbContext context)
     {
-        if (context.Contractors.Any())
-        {
-            return;
-        }
+        if (context.Contractors.Any()) return;
 
         Randomizer.Seed = new Random(2026);
 
@@ -35,10 +32,10 @@ public static class DataSeeder
     }
 
     /// <summary>
-    /// Generates a list of contractor entities populated with realistic and valid data.
+    ///     Generates a list of contractor entities populated with realistic and valid data.
     /// </summary>
     /// <param name="count">The number of contractor entities to generate.</param>
-    /// <returns>A list of <see cref="Contractor"/> objects populated with realistic data.</returns>
+    /// <returns>A list of <see cref="Contractor" /> objects populated with realistic data.</returns>
     private static List<Contractor> GenerateContractors(int count)
     {
         var contractorFaker = new Faker<Contractor>()
@@ -51,10 +48,10 @@ public static class DataSeeder
     }
 
     /// <summary>
-    /// Generates a list of financial statement entities populated with realistic data.
+    ///     Generates a list of financial statement entities populated with realistic data.
     /// </summary>
     /// <param name="contractors"></param>
-    /// <returns>A list of <see cref="FinancialStatement"/> objects populated with realistic data.</returns>
+    /// <returns>A list of <see cref="FinancialStatement" /> objects populated with realistic data.</returns>
     private static List<FinancialStatement> GenerateFinancialStatements(IEnumerable<Contractor> contractors)
     {
         var statements = new List<FinancialStatement>();
@@ -90,10 +87,10 @@ public static class DataSeeder
     }
 
     /// <summary>
-    /// Generates a list of invoice entities populated with realistic data.
+    ///     Generates a list of invoice entities populated with realistic data.
     /// </summary>
     /// <param name="contractors"></param>
-    /// <returns>A list of <see cref="Invoice"/> objects populated with realistic data.</returns>
+    /// <returns>A list of <see cref="Invoice" /> objects populated with realistic data.</returns>
     private static List<Invoice> GenerateInvoices(IEnumerable<Contractor> contractors)
     {
         var invoices = new List<Invoice>();
@@ -127,13 +124,13 @@ public static class DataSeeder
     }
 
     /// <summary>
-    /// Generates a valid tax ID number using the Luhn algorithm.
+    ///     Generates a valid tax ID number using the Luhn algorithm.
     /// </summary>
     /// <param name="randomizer"></param>
     /// <returns>A string containing a valid tax ID.</returns>
     private static string GenerateValidTaxId(Randomizer randomizer)
     {
-        int[] weights = [ 6, 5, 7, 2, 3, 4, 5, 6, 7 ];
+        int[] weights = [6, 5, 7, 2, 3, 4, 5, 6, 7];
 
         while (true)
         {
@@ -148,10 +145,7 @@ public static class DataSeeder
 
             var checksum = sum % 11;
 
-            if (checksum == 10)
-            {
-                continue;
-            }
+            if (checksum == 10) continue;
 
             return string.Join("", digits) + checksum;
         }

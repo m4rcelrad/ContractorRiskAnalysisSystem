@@ -23,18 +23,18 @@ public class WeightedScoreAggregation(IReadOnlyDictionary<string, decimal> model
     ///     An <see cref="AggregatedRiskResult" /> containing the overall determined risk level
     ///     and the underlying individual results.
     /// </returns>
-    public AggregatedRiskResult Aggregate(IReadOnlyCollection<RiskResult> results) => new()
+    public AggregatedRiskResult Aggregate(IReadOnlyCollection<RiskResult> results)
     {
-        OverallRiskLevel = DetermineOverallRisk(results),
-        IndividualResults = results
-    };
+        return new AggregatedRiskResult
+        {
+            OverallRiskLevel = DetermineOverallRisk(results),
+            IndividualResults = results
+        };
+    }
 
     private RiskLevel DetermineOverallRisk(IReadOnlyCollection<RiskResult> results)
     {
-        if (results.Count == 0)
-        {
-            return RiskLevel.Grey;
-        }
+        if (results.Count == 0) return RiskLevel.Grey;
 
         var totalWeight = 0m;
         var weightedScoreSum = 0m;
@@ -55,10 +55,7 @@ public class WeightedScoreAggregation(IReadOnlyDictionary<string, decimal> model
             totalWeight += weight;
         }
 
-        if (totalWeight == 0m)
-        {
-            return RiskLevel.Grey;
-        }
+        if (totalWeight == 0m) return RiskLevel.Grey;
 
         var finalScore = weightedScoreSum / totalWeight;
 

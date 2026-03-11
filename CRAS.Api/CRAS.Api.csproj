@@ -5,20 +5,20 @@
         <LangVersion>preview</LangVersion>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-      <UserSecretsId>d2651fca-e5fb-4c01-b41b-a31bf1194020</UserSecretsId>
-  </PropertyGroup>
+        <UserSecretsId>d2651fca-e5fb-4c01-b41b-a31bf1194020</UserSecretsId>
+    </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.13" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.13"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.3">
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-          <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\CRAS.Infrastructure\CRAS.Infrastructure.csproj" />
+        <ProjectReference Include="..\CRAS.Infrastructure\CRAS.Infrastructure.csproj"/>
     </ItemGroup>
 
 </Project>

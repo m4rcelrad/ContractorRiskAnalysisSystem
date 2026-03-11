@@ -97,23 +97,26 @@ public class AltmanZDoublePrimeModelTests
         decimal workingCapital = 0m,
         decimal retainedEarnings = 0m,
         decimal ebit = 0m,
-        decimal bookValueEquity = 0m) => new()
+        decimal bookValueEquity = 0m)
     {
-        ContractorId = Guid.NewGuid(),
-        Year = DateTime.UtcNow.Year,
-        TotalAssets = totalAssets,
-        TotalLiabilities = totalLiabilities,
-        CurrentAssets = 0m,
-        CurrentLiabilities = 0m,
-        WorkingCapital = workingCapital,
-        RetainedEarnings = retainedEarnings,
-        EBIT = ebit,
-        MarketValueEquity = 0m,
-        BookValueEquity = bookValueEquity,
-        Sales = 0m,
-        NetIncome = 0m,
-        PreviousNetIncome = 0m,
-        FundsFromOperations = 0m,
-        GNPPriceIndex = 1m
-    };
+        return new FinancialStatement
+        {
+            ContractorId = Guid.NewGuid(),
+            Year = DateTime.UtcNow.Year,
+            TotalAssets = totalAssets,
+            TotalLiabilities = totalLiabilities,
+            CurrentAssets = 0m,
+            CurrentLiabilities = 0m,
+            WorkingCapital = workingCapital,
+            RetainedEarnings = retainedEarnings,
+            EBIT = ebit,
+            MarketValueEquity = 0m,
+            BookValueEquity = bookValueEquity,
+            Sales = 0m,
+            NetIncome = 0m,
+            PreviousNetIncome = 0m,
+            FundsFromOperations = 0m,
+            GNPPriceIndex = 1m
+        };
+    }
 }

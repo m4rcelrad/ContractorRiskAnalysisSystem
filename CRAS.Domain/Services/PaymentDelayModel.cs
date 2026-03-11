@@ -14,20 +14,15 @@ public class PaymentDelayModel : IBehavioralRiskModel
     public RiskResult CalculateRisk(Contractor contractor)
     {
         var relevantInvoices = contractor.Invoices
-            .Where(i => i.IsPaid || !i.IsPaid && i.DueDate < DateTime.UtcNow)
+            .Where(i => i.IsPaid || (!i.IsPaid && i.DueDate < DateTime.UtcNow))
             .ToList();
 
         if (relevantInvoices.Count == 0)
-        {
             return new RiskResult { Model = "Weighted Payment Delay", RiskLevel = RiskLevel.Grey };
-        }
 
         var totalAmount = relevantInvoices.Sum(i => i.Amount);
 
-        if (totalAmount == 0)
-        {
-            return new RiskResult { Model = "Weighted Payment Delay", RiskLevel = RiskLevel.Grey };
-        }
+        if (totalAmount == 0) return new RiskResult { Model = "Weighted Payment Delay", RiskLevel = RiskLevel.Grey };
 
         var weightedDelay = relevantInvoices
             .Sum(i => i.DelayInDays * (i.Amount / totalAmount));

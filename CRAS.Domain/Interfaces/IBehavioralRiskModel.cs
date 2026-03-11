@@ -11,7 +11,7 @@ public interface IBehavioralRiskModel
     /// <summary>
     ///     Calculates the risk level based on the full profile and history of a specific contractor.
     /// </summary>
-    /// <param name="contractor">The <see cref="Contractor"/> entity containing profile data and invoice history.</param>
-    /// <returns>A <see cref="RiskResult"/> representing the calculated behavioral risk.</returns>
+    /// <param name="contractor">The <see cref="Contractor" /> entity containing profile data and invoice history.</param>
+    /// <returns>A <see cref="RiskResult" /> representing the calculated behavioral risk.</returns>
     RiskResult CalculateRisk(Contractor contractor);
 }

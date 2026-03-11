@@ -96,23 +96,26 @@ public class OhlsonOScoreModelTests
         decimal netIncome = 0m,
         decimal previousNetIncome = 0m,
         decimal fundsFromOperations = 0m,
-        decimal gnpPriceIndex = 1m) => new()
+        decimal gnpPriceIndex = 1m)
     {
-        ContractorId = Guid.NewGuid(),
-        Year = DateTime.UtcNow.Year,
-        TotalAssets = totalAssets,
-        TotalLiabilities = totalLiabilities,
-        CurrentAssets = currentAssets,
-        CurrentLiabilities = currentLiabilities,
-        WorkingCapital = workingCapital,
-        RetainedEarnings = 0m,
-        EBIT = 0m,
-        MarketValueEquity = 0m,
-        BookValueEquity = 0m,
-        Sales = 0m,
-        NetIncome = netIncome,
-        PreviousNetIncome = previousNetIncome,
-        FundsFromOperations = fundsFromOperations,
-        GNPPriceIndex = gnpPriceIndex
-    };
+        return new FinancialStatement
+        {
+            ContractorId = Guid.NewGuid(),
+            Year = DateTime.UtcNow.Year,
+            TotalAssets = totalAssets,
+            TotalLiabilities = totalLiabilities,
+            CurrentAssets = currentAssets,
+            CurrentLiabilities = currentLiabilities,
+            WorkingCapital = workingCapital,
+            RetainedEarnings = 0m,
+            EBIT = 0m,
+            MarketValueEquity = 0m,
+            BookValueEquity = 0m,
+            Sales = 0m,
+            NetIncome = netIncome,
+            PreviousNetIncome = previousNetIncome,
+            FundsFromOperations = fundsFromOperations,
+            GNPPriceIndex = gnpPriceIndex
+        };
+    }
 }

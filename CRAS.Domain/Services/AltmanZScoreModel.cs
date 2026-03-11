@@ -28,9 +28,7 @@ public class AltmanZScoreModel : IRiskModel
     public RiskResult CalculateRisk(FinancialStatement statement)
     {
         if (statement.TotalAssets == 0m || statement.TotalLiabilities == 0m)
-        {
             throw new ArgumentException("Invalid financial data: TotalAssets and TotalLiabilities cannot be zero.");
-        }
 
         var x1 = statement.WorkingCapital / statement.TotalAssets;
         var x2 = statement.RetainedEarnings / statement.TotalAssets;

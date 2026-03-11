@@ -45,11 +45,12 @@ public class RiskEngineTests
 
         var strategyMock = new Mock<IRiskAggregationStrategy>();
 
-        var engine = new RiskEngine([ modelMock.Object ], strategyMock.Object);
+        var engine = new RiskEngine([modelMock.Object], strategyMock.Object);
 
         engine.Assess(statement);
 
         modelMock.Verify(m => m.CalculateRisk(statement), Times.Once);
-        strategyMock.Verify(s => s.Aggregate(It.Is<IReadOnlyCollection<RiskResult>>(c => c.Contains(modelResult))), Times.Once);
+        strategyMock.Verify(s => s.Aggregate(It.Is<IReadOnlyCollection<RiskResult>>(c => c.Contains(modelResult))),
+            Times.Once);
     }
 }
