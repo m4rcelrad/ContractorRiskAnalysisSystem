@@ -18,7 +18,26 @@ public class RiskEngineTests
     [Fact]
     public void Assess_CallsAllModelsAndAggregatesResults()
     {
-        var statement = new FinancialStatement();
+        var statement = new FinancialStatement
+        {
+            ContractorId = Guid.NewGuid(),
+            Year = DateTime.UtcNow.Year,
+            TotalAssets = 0m,
+            TotalLiabilities = 0m,
+            CurrentAssets = 0m,
+            CurrentLiabilities = 0m,
+            WorkingCapital = 0m,
+            RetainedEarnings = 0m,
+            EBIT = 0m,
+            MarketValueEquity = 0m,
+            BookValueEquity = 0m,
+            Sales = 0m,
+            NetIncome = 0m,
+            PreviousNetIncome = 0m,
+            FundsFromOperations = 0m,
+            GNPPriceIndex = 1m
+        };
+
         var modelResult = new RiskResult { Model = "MockModel" };
 
         var modelMock = new Mock<IRiskModel>();
@@ -26,11 +45,12 @@ public class RiskEngineTests
 
         var strategyMock = new Mock<IRiskAggregationStrategy>();
 
-        var engine = new RiskEngine([ modelMock.Object ], strategyMock.Object);
+        var engine = new RiskEngine([modelMock.Object], strategyMock.Object);
 
         engine.Assess(statement);
 
         modelMock.Verify(m => m.CalculateRisk(statement), Times.Once);
-        strategyMock.Verify(s => s.Aggregate(It.Is<IReadOnlyCollection<RiskResult>>(c => c.Contains(modelResult))), Times.Once);
+        strategyMock.Verify(s => s.Aggregate(It.Is<IReadOnlyCollection<RiskResult>>(c => c.Contains(modelResult))),
+            Times.Once);
     }
 }

@@ -43,7 +43,8 @@ public class WeightedScoreAggregationTests
     [Fact]
     public void Aggregate_UsesDefaultWeight_WhenModelIsMissingFromDictionary()
     {
-        var strategy = new WeightedScoreAggregation(new ReadOnlyDictionary<string, decimal>(new Dictionary<string, decimal>()));
+        var strategy =
+            new WeightedScoreAggregation(new ReadOnlyDictionary<string, decimal>(new Dictionary<string, decimal>()));
 
         var aggregated = strategy.Aggregate(
         [

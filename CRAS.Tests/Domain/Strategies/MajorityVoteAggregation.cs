@@ -84,7 +84,7 @@ public class MajorityVoteAggregationTests
     [Fact]
     public void Aggregate_ReturnsGrey_WhenResultsAreEmpty()
     {
-        RiskResult[] results = [ ];
+        RiskResult[] results = [];
 
         var aggregated = _strategy.Aggregate(results);
 

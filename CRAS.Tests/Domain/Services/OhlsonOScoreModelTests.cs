@@ -24,13 +24,11 @@ public class OhlsonOScoreModelTests
     [Fact]
     public void CalculateRisk_ThrowsArgumentException_WhenGnpPriceIndexIsZero()
     {
-        var statement = new FinancialStatement
-        {
-            TotalAssets = 1000m,
-            CurrentAssets = 500m,
-            TotalLiabilities = 500m,
-            GNPPriceIndex = 0m
-        };
+        var statement = CreateTestStatement(
+            1000m,
+            500m,
+            500m,
+            gnpPriceIndex: 0m);
 
         Assert.Throws<ArgumentException>(() => _model.CalculateRisk(statement));
     }
@@ -42,13 +40,11 @@ public class OhlsonOScoreModelTests
     [Fact]
     public void CalculateRisk_ThrowsArgumentException_WhenCurrentAssetsAreZero()
     {
-        var statement = new FinancialStatement
-        {
-            TotalAssets = 1000m,
-            TotalLiabilities = 500m,
-            CurrentAssets = 0m,
-            GNPPriceIndex = 110.5m
-        };
+        var statement = CreateTestStatement(
+            1000m,
+            0m,
+            500m,
+            gnpPriceIndex: 110.5m);
 
         Assert.Throws<ArgumentException>(() => _model.CalculateRisk(statement));
     }
@@ -59,22 +55,67 @@ public class OhlsonOScoreModelTests
     [Fact]
     public void CalculateRisk_ReturnsValidProbability_WhenFinancialsAreProvided()
     {
-        var statement = new FinancialStatement
-        {
-            TotalAssets = 500000m,
-            TotalLiabilities = 250000m,
-            CurrentAssets = 300000m,
-            CurrentLiabilities = 150000m,
-            WorkingCapital = 150000m,
-            NetIncome = 50000m,
-            PreviousNetIncome = 40000m,
-            FundsFromOperations = 60000m,
-            GNPPriceIndex = 110.5m
-        };
+        var statement = CreateTestStatement(
+            500000m,
+            300000m,
+            250000m,
+            150000m,
+            150000m,
+            50000m,
+            40000m,
+            60000m,
+            110.5m);
 
         var result = _model.CalculateRisk(statement);
 
         Assert.Equal("Ohlson O-Score", result.Model);
         Assert.True(result.Score is >= 0m and <= 1.0m);
+    }
+
+    /// <summary>
+    ///     Creates a test financial statement with the specified values.
+    /// </summary>
+    /// <param name="totalAssets"></param>
+    /// <param name="currentAssets"></param>
+    /// <param name="totalLiabilities"></param>
+    /// <param name="workingCapital"></param>
+    /// <param name="currentLiabilities"></param>
+    /// <param name="netIncome"></param>
+    /// <param name="previousNetIncome"></param>
+    /// <param name="fundsFromOperations"></param>
+    /// <param name="gnpPriceIndex"></param>
+    /// <returns>
+    ///     <see cref="FinancialStatement" />
+    /// </returns>
+    private static FinancialStatement CreateTestStatement(
+        decimal totalAssets = 0m,
+        decimal currentAssets = 0m,
+        decimal totalLiabilities = 0m,
+        decimal currentLiabilities = 0m,
+        decimal workingCapital = 0m,
+        decimal netIncome = 0m,
+        decimal previousNetIncome = 0m,
+        decimal fundsFromOperations = 0m,
+        decimal gnpPriceIndex = 1m)
+    {
+        return new FinancialStatement
+        {
+            ContractorId = Guid.NewGuid(),
+            Year = DateTime.UtcNow.Year,
+            TotalAssets = totalAssets,
+            TotalLiabilities = totalLiabilities,
+            CurrentAssets = currentAssets,
+            CurrentLiabilities = currentLiabilities,
+            WorkingCapital = workingCapital,
+            RetainedEarnings = 0m,
+            EBIT = 0m,
+            MarketValueEquity = 0m,
+            BookValueEquity = 0m,
+            Sales = 0m,
+            NetIncome = netIncome,
+            PreviousNetIncome = previousNetIncome,
+            FundsFromOperations = fundsFromOperations,
+            GNPPriceIndex = gnpPriceIndex
+        };
     }
 }

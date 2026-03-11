@@ -23,18 +23,18 @@ public class MajorityVoteAggregation : IRiskAggregationStrategy
     ///     An <see cref="AggregatedRiskResult" /> containing the overall determined risk level
     ///     and the underlying individual results.
     /// </returns>
-    public AggregatedRiskResult Aggregate(IReadOnlyCollection<RiskResult> results) => new()
+    public AggregatedRiskResult Aggregate(IReadOnlyCollection<RiskResult> results)
     {
-        OverallRiskLevel = DetermineOverallRisk(results),
-        IndividualResults = results
-    };
+        return new AggregatedRiskResult
+        {
+            OverallRiskLevel = DetermineOverallRisk(results),
+            IndividualResults = results
+        };
+    }
 
     private static RiskLevel DetermineOverallRisk(IReadOnlyCollection<RiskResult> results)
     {
-        if (results.Count == 0)
-        {
-            return RiskLevel.Grey;
-        }
+        if (results.Count == 0) return RiskLevel.Grey;
 
         var distressCount = results.Count(r => r.RiskLevel == RiskLevel.Distress);
         var safeCount = results.Count(r => r.RiskLevel == RiskLevel.Safe);

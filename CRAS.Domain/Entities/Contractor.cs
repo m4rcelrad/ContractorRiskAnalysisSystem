@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace CRAS.Domain.Entities;
+﻿namespace CRAS.Domain.Entities;
 
 /// <summary>
 ///     Represents a contractor entity.
@@ -18,7 +16,6 @@ public class Contractor
     /// <exception cref="ArgumentException">
     ///     Thrown when the provided value does not pass the checksum or formatting validation.
     /// </exception>
-    [Required] [MaxLength(10)]
     public required string TaxId
     {
         get;
@@ -28,7 +25,13 @@ public class Contractor
     /// <summary>
     ///     Gets or sets the collection of financial statements associated with the contractor.
     /// </summary>
-    public ICollection<FinancialStatement> FinancialStatements { get; private set; } = new HashSet<FinancialStatement>();
+    public ICollection<FinancialStatement> FinancialStatements { get; private set; } =
+        new HashSet<FinancialStatement>();
+
+    /// <summary>
+    ///     Gets the collection of invoices associated with this contractor.
+    /// </summary>
+    public ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
 
     /// <summary>
     ///     Validates a Polish Tax Identification Number (NIP) using standard weights and checksum algorithms.
@@ -41,16 +44,11 @@ public class Contractor
         var cleaned = taxId.Replace("-", "");
         if (cleaned.Length != 10 || !cleaned.All(char.IsDigit)) return false;
 
-        int[] weights = [ 6, 5, 7, 2, 3, 4, 5, 6, 7 ];
+        int[] weights = [6, 5, 7, 2, 3, 4, 5, 6, 7];
         var sum = 0;
         for (var i = 0; i < 9; i++)
             sum += (cleaned[i] - '0') * weights[i];
 
         return sum % 11 == cleaned[9] - '0';
     }
-
-    /// <summary>
-    ///     Gets the collection of invoices associated with this contractor.
-    /// </summary>
-    public ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
 }
