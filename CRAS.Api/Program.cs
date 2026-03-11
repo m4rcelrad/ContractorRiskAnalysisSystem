@@ -25,6 +25,8 @@ public static class Program
         builder.Services.AddScoped<IRiskModel, AltmanZDoublePrimeModel>();
         builder.Services.AddScoped<IRiskModel, OhlsonOScoreModel>();
 
+        builder.Services.AddScoped<IBehavioralRiskModel, PaymentDelayModel>();
+
         builder.Services.AddScoped<IRiskEngine, RiskEngine>();
 
         var app = builder.Build();

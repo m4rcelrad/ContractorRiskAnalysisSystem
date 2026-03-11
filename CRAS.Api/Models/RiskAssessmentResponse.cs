@@ -4,8 +4,8 @@ using CRAS.Domain.Models;
 namespace CRAS.Api.Models;
 
 /// <summary>
-/// Represents a response containing the result of a contractor's risk assessment.
-/// This includes the overall risk evaluation, detailed breakdown, and other metadata.
+///     Represents a response containing the result of a contractor's risk assessment.
+///     This includes the overall risk evaluation, detailed breakdown, and other metadata.
 /// </summary>
 public class RiskAssessmentResponse
 {

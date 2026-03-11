@@ -18,9 +18,16 @@ public class RiskEngineTests
     [Fact]
     public void Assess_CallsAllModelsAndAggregatesResults()
     {
+        var contractorId = Guid.NewGuid();
+
+        var contractor = new Contractor
+        {
+            TaxId = "1234567890"
+        };
+
         var statement = new FinancialStatement
         {
-            ContractorId = Guid.NewGuid(),
+            ContractorId = contractorId,
             Year = DateTime.UtcNow.Year,
             TotalAssets = 0m,
             TotalLiabilities = 0m,
@@ -38,19 +45,25 @@ public class RiskEngineTests
             GNPPriceIndex = 1m
         };
 
-        var modelResult = new RiskResult { Model = "MockModel" };
+        var financialModelResult = new RiskResult { Model = "MockFinancialModel" };
+        var behavioralModelResult = new RiskResult { Model = "MockBehavioralModel" };
 
-        var modelMock = new Mock<IRiskModel>();
-        modelMock.Setup(m => m.CalculateRisk(statement)).Returns(modelResult);
+        var financialModelMock = new Mock<IRiskModel>();
+        financialModelMock.Setup(m => m.CalculateRisk(statement)).Returns(financialModelResult);
+
+        var behavioralModelMock = new Mock<IBehavioralRiskModel>();
+        behavioralModelMock.Setup(m => m.CalculateRisk(contractor)).Returns(behavioralModelResult);
 
         var strategyMock = new Mock<IRiskAggregationStrategy>();
 
-        var engine = new RiskEngine([modelMock.Object], strategyMock.Object);
+        var engine = new RiskEngine([financialModelMock.Object], [behavioralModelMock.Object], strategyMock.Object);
 
-        engine.Assess(statement);
+        engine.Assess(contractor, statement);
 
-        modelMock.Verify(m => m.CalculateRisk(statement), Times.Once);
-        strategyMock.Verify(s => s.Aggregate(It.Is<IReadOnlyCollection<RiskResult>>(c => c.Contains(modelResult))),
-            Times.Once);
+        financialModelMock.Verify(m => m.CalculateRisk(statement), Times.Once);
+        behavioralModelMock.Verify(m => m.CalculateRisk(contractor), Times.Once);
+
+        strategyMock.Verify(s => s.Aggregate(It.Is<IReadOnlyCollection<RiskResult>>(c =>
+            c.Contains(financialModelResult) && c.Contains(behavioralModelResult))), Times.Once);
     }
 }
