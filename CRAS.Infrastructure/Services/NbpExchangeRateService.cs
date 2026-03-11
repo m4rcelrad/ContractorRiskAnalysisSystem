@@ -4,16 +4,16 @@ using CRAS.Domain.Interfaces;
 namespace CRAS.Infrastructure.Services;
 
 /// <summary>
-/// A service for fetching exchange rates from the National Bank of Poland (NBP).
+///     A service for fetching exchange rates from the National Bank of Poland (NBP).
 /// </summary>
 /// <remarks>
-/// This service uses the NBP's REST API to fetch exchange rates for a specific currency on a specific date.
+///     This service uses the NBP's REST API to fetch exchange rates for a specific currency on a specific date.
 /// </remarks>
 /// <param name="httpClient"></param>
 public class NbpExchangeRateService(HttpClient httpClient) : IExchangeRateService
 {
     /// <summary>
-    /// Serializer options for deserializing JSON responses from the NBP API.
+    ///     Serializer options for deserializing JSON responses from the NBP API.
     /// </summary>
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
@@ -21,10 +21,10 @@ public class NbpExchangeRateService(HttpClient httpClient) : IExchangeRateServic
     };
 
     /// <summary>
-    /// Fetches the exchange rate for a specific currency on a specific date from the NBP API.
+    ///     Fetches the exchange rate for a specific currency on a specific date from the NBP API.
     /// </summary>
     /// <remarks>
-    /// If the currency code is "PLN", the exchange rate is always 1.
+    ///     If the currency code is "PLN", the exchange rate is always 1.
     /// </remarks>
     /// <param name="currencyCode"></param>
     /// <param name="date"></param>
@@ -54,7 +54,7 @@ public class NbpExchangeRateService(HttpClient httpClient) : IExchangeRateServic
     }
 
     /// <summary>
-    /// Class representing the JSON response from the NBP API.
+    ///     Class representing the JSON response from the NBP API.
     /// </summary>
     private class NbpResponse
     {
@@ -62,7 +62,7 @@ public class NbpExchangeRateService(HttpClient httpClient) : IExchangeRateServic
     }
 
     /// <summary>
-    /// Class representing a single exchange rate from the NBP API.
+    ///     Class representing a single exchange rate from the NBP API.
     /// </summary>
     private class NbpRate
     {

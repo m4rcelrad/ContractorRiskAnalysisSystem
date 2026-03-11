@@ -101,7 +101,7 @@ public static class DataSeeder
             var invoiceFaker = new Faker<Invoice>()
                 .CustomInstantiator(f =>
                 {
-                    var issueDate = f.Date.Past();
+                    var issueDate = f.Date.Past().ToUniversalTime();
                     var dueDate = issueDate.AddDays(f.PickRandom(14, 30, 60));
                     var isPaid = f.Random.Bool(0.7f);
                     var paymentDate = isPaid ? dueDate.AddDays(f.Random.Int(-5, 30)) : (DateTime?)null;
@@ -110,7 +110,7 @@ public static class DataSeeder
                     {
                         ContractorId = contractor.Id,
                         Amount = f.Finance.Amount(1000m, 100000m),
-                        Currency = "PLN",
+                        Currency = f.Finance.Currency().Code,
                         IssueDate = issueDate,
                         DueDate = dueDate,
                         IsPaid = isPaid,
