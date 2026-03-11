@@ -24,6 +24,7 @@ public static class DataSeeder
 
         var financialStatements = GenerateFinancialStatements(contractors);
         context.FinancialStatements.AddRange(financialStatements);
+        context.SaveChanges();
 
         var invoices = GenerateInvoices(contractors);
         context.Invoices.AddRange(invoices);
