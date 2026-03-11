@@ -22,7 +22,7 @@ public class RiskEngineTests
 
         var contractor = new Contractor
         {
-            TaxId = "1234567890"
+            TaxId = "0000000000"
         };
 
         var statement = new FinancialStatement
