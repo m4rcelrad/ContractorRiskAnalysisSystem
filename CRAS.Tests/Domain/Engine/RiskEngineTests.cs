@@ -16,7 +16,7 @@ public class RiskEngineTests
     ///     to the designated aggregation strategy.
     /// </summary>
     [Fact]
-    public void Assess_CallsAllModelsAndAggregatesResults()
+    public async Task AssessAsync_CallsAllModelsAndAggregatesResults()
     {
         var contractorId = Guid.NewGuid();
 
@@ -52,16 +52,16 @@ public class RiskEngineTests
         financialModelMock.Setup(m => m.CalculateRisk(statement)).Returns(financialModelResult);
 
         var behavioralModelMock = new Mock<IBehavioralRiskModel>();
-        behavioralModelMock.Setup(m => m.CalculateRisk(contractor)).Returns(behavioralModelResult);
+        behavioralModelMock.Setup(m => m.CalculateRiskAsync(contractor)).ReturnsAsync(behavioralModelResult);
 
         var strategyMock = new Mock<IRiskAggregationStrategy>();
 
         var engine = new RiskEngine([financialModelMock.Object], [behavioralModelMock.Object], strategyMock.Object);
 
-        engine.Assess(contractor, statement);
+        await engine.AssessAsync(contractor, statement);
 
         financialModelMock.Verify(m => m.CalculateRisk(statement), Times.Once);
-        behavioralModelMock.Verify(m => m.CalculateRisk(contractor), Times.Once);
+        behavioralModelMock.Verify(m => m.CalculateRiskAsync(contractor), Times.Once);
 
         strategyMock.Verify(s => s.Aggregate(It.Is<IReadOnlyCollection<RiskResult>>(c =>
             c.Contains(financialModelResult) && c.Contains(behavioralModelResult))), Times.Once);
