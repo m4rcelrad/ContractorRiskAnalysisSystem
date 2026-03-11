@@ -21,11 +21,7 @@ public class AltmanZDoublePrimeModelTests
     [Fact]
     public void CalculateRisk_ThrowsArgumentException_WhenTotalAssetsIsZero()
     {
-        var statement = new FinancialStatement
-        {
-            TotalAssets = 0m,
-            TotalLiabilities = 100000m
-        };
+        var statement = CreateTestStatement(0m, 100000m);
 
         Assert.Throws<ArgumentException>(() => _model.CalculateRisk(statement));
     }
@@ -36,11 +32,7 @@ public class AltmanZDoublePrimeModelTests
     [Fact]
     public void CalculateRisk_ThrowsArgumentException_WhenTotalLiabilitiesIsZero()
     {
-        var statement = new FinancialStatement
-        {
-            TotalAssets = 100000m,
-            TotalLiabilities = 0m
-        };
+        var statement = CreateTestStatement(100000m, 0m);
 
         Assert.Throws<ArgumentException>(() => _model.CalculateRisk(statement));
     }
@@ -52,15 +44,13 @@ public class AltmanZDoublePrimeModelTests
     [Fact]
     public void CalculateRisk_ReturnsDistressRiskLevel_WhenFinancialsAreWeak()
     {
-        var statement = new FinancialStatement
-        {
-            TotalAssets = 100000m,
-            TotalLiabilities = 90000m,
-            WorkingCapital = -10000m,
-            RetainedEarnings = -5000m,
-            EBIT = -2000m,
-            BookValueEquity = 10000m
-        };
+        var statement = CreateTestStatement(
+            100000m,
+            90000m,
+            -10000m,
+            -5000m,
+            -2000m,
+            10000m);
 
         var result = _model.CalculateRisk(statement);
 
@@ -75,19 +65,55 @@ public class AltmanZDoublePrimeModelTests
     [Fact]
     public void CalculateRisk_ReturnsSafeRiskLevel_WhenFinancialsAreStrong()
     {
-        var statement = new FinancialStatement
-        {
-            TotalAssets = 100000m,
-            TotalLiabilities = 20000m,
-            WorkingCapital = 60000m,
-            RetainedEarnings = 40000m,
-            EBIT = 25000m,
-            BookValueEquity = 80000m
-        };
+        var statement = CreateTestStatement(
+            100000m,
+            20000m,
+            60000m,
+            40000m,
+            25000m,
+            80000m);
 
         var result = _model.CalculateRisk(statement);
 
         Assert.Equal(RiskLevel.Safe, result.RiskLevel);
         Assert.True(result.Score > 2.60m);
     }
+
+    /// <summary>
+    ///     Creates a test financial statement with the specified values.
+    /// </summary>
+    /// <param name="totalAssets"></param>
+    /// <param name="totalLiabilities"></param>
+    /// <param name="workingCapital"></param>
+    /// <param name="retainedEarnings"></param>
+    /// <param name="ebit"></param>
+    /// <param name="bookValueEquity"></param>
+    /// <returns>
+    ///     <see cref="FinancialStatement" />
+    /// </returns>
+    private static FinancialStatement CreateTestStatement(
+        decimal totalAssets,
+        decimal totalLiabilities,
+        decimal workingCapital = 0m,
+        decimal retainedEarnings = 0m,
+        decimal ebit = 0m,
+        decimal bookValueEquity = 0m) => new()
+    {
+        ContractorId = Guid.NewGuid(),
+        Year = DateTime.UtcNow.Year,
+        TotalAssets = totalAssets,
+        TotalLiabilities = totalLiabilities,
+        CurrentAssets = 0m,
+        CurrentLiabilities = 0m,
+        WorkingCapital = workingCapital,
+        RetainedEarnings = retainedEarnings,
+        EBIT = ebit,
+        MarketValueEquity = 0m,
+        BookValueEquity = bookValueEquity,
+        Sales = 0m,
+        NetIncome = 0m,
+        PreviousNetIncome = 0m,
+        FundsFromOperations = 0m,
+        GNPPriceIndex = 1m
+    };
 }
