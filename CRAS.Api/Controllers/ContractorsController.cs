@@ -26,23 +26,18 @@ public class ContractorsController(AppDbContext context, IRiskEngine riskEngine)
     {
         var contractor = await context.Contractors
             .Include(c => c.FinancialStatements)
+            .Include(c => c.Invoices)
             .FirstOrDefaultAsync(c => c.Id == id);
 
-        if (contractor == null)
-        {
-            return NotFound("Contractor not found.");
-        }
+        if (contractor == null) return NotFound("Contractor not found.");
 
         var latestStatement = contractor.FinancialStatements
             .OrderByDescending(s => s.Year)
             .FirstOrDefault();
 
-        if (latestStatement == null)
-        {
-            return BadRequest("No financial statements available for this contractor.");
-        }
+        if (latestStatement == null) return BadRequest("No financial statements available for this contractor.");
 
-        var result = riskEngine.Assess(latestStatement);
+        var result = riskEngine.Assess(contractor, latestStatement);
 
         var response = new RiskAssessmentResponse
         {

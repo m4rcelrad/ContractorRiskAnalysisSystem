@@ -24,27 +24,25 @@ public class PaymentDelayModelTests
     [Fact]
     public void CalculateRisk_ReturnsSafe_WhenWeightedDelayIsLow()
     {
-        _contractor.Invoices =
-        [
-            new Invoice
-            {
-                ContractorId = _contractor.Id,
-                Amount = 1000m,
-                IssueDate = DateTime.UtcNow.AddDays(-20),
-                DueDate = DateTime.UtcNow.AddDays(-10),
-                PaymentDate = DateTime.UtcNow.AddDays(-10),
-                IsPaid = true
-            },
-            new Invoice
-            {
-                ContractorId = _contractor.Id,
-                Amount = 1000m,
-                IssueDate = DateTime.UtcNow.AddDays(-20),
-                DueDate = DateTime.UtcNow.AddDays(-10),
-                PaymentDate = DateTime.UtcNow.AddDays(-6),
-                IsPaid = true
-            }
-        ];
+        _contractor.Invoices.Add(new Invoice
+        {
+            ContractorId = _contractor.Id,
+            Amount = 1000m,
+            IssueDate = DateTime.UtcNow.AddDays(-20),
+            DueDate = DateTime.UtcNow.AddDays(-10),
+            PaymentDate = DateTime.UtcNow.AddDays(-10),
+            IsPaid = true
+        });
+
+        _contractor.Invoices.Add(new Invoice
+        {
+            ContractorId = _contractor.Id,
+            Amount = 1000m,
+            IssueDate = DateTime.UtcNow.AddDays(-20),
+            DueDate = DateTime.UtcNow.AddDays(-10),
+            PaymentDate = DateTime.UtcNow.AddDays(-6),
+            IsPaid = true
+        });
 
         var result = _model.CalculateRisk(_contractor);
 
@@ -59,26 +57,24 @@ public class PaymentDelayModelTests
     [Fact]
     public void CalculateRisk_ReturnsDistress_WhenHighValueInvoiceIsSeverelyOverdue()
     {
-        _contractor.Invoices =
-        [
-            new Invoice
-            {
-                ContractorId = _contractor.Id,
-                Amount = 10000m,
-                IssueDate = DateTime.UtcNow.AddDays(-45),
-                DueDate = DateTime.UtcNow.AddDays(-30),
-                IsPaid = false
-            },
-            new Invoice
-            {
-                ContractorId = _contractor.Id,
-                Amount = 100m,
-                IssueDate = DateTime.UtcNow.AddDays(-20),
-                DueDate = DateTime.UtcNow.AddDays(-10),
-                PaymentDate = DateTime.UtcNow.AddDays(-10),
-                IsPaid = true
-            }
-        ];
+        _contractor.Invoices.Add(new Invoice
+        {
+            ContractorId = _contractor.Id,
+            Amount = 10000m,
+            IssueDate = DateTime.UtcNow.AddDays(-45),
+            DueDate = DateTime.UtcNow.AddDays(-30),
+            IsPaid = false
+        });
+
+        _contractor.Invoices.Add(new Invoice
+        {
+            ContractorId = _contractor.Id,
+            Amount = 100m,
+            IssueDate = DateTime.UtcNow.AddDays(-20),
+            DueDate = DateTime.UtcNow.AddDays(-10),
+            PaymentDate = DateTime.UtcNow.AddDays(-10),
+            IsPaid = true
+        });
 
         var result = _model.CalculateRisk(_contractor);
 
@@ -92,18 +88,15 @@ public class PaymentDelayModelTests
     [Fact]
     public void CalculateRisk_ReturnsGrey_WhenWeightedDelayIsModerate()
     {
-        _contractor.Invoices =
-        [
-            new Invoice
-            {
-                ContractorId = _contractor.Id,
-                Amount = 1000m,
-                IssueDate = DateTime.UtcNow.AddDays(-30),
-                DueDate = DateTime.UtcNow.AddDays(-20),
-                PaymentDate = DateTime.UtcNow.AddDays(-10),
-                IsPaid = true
-            }
-        ];
+        _contractor.Invoices.Add(new Invoice
+        {
+            ContractorId = _contractor.Id,
+            Amount = 1000m,
+            IssueDate = DateTime.UtcNow.AddDays(-30),
+            DueDate = DateTime.UtcNow.AddDays(-20),
+            PaymentDate = DateTime.UtcNow.AddDays(-10),
+            IsPaid = true
+        });
 
         var result = _model.CalculateRisk(_contractor);
 
@@ -118,17 +111,14 @@ public class PaymentDelayModelTests
     [Fact]
     public void CalculateRisk_ReturnsGrey_WhenNoRelevantInvoicesExist()
     {
-        _contractor.Invoices =
-        [
-            new Invoice
-            {
-                ContractorId = _contractor.Id,
-                Amount = 1000m,
-                IssueDate = DateTime.UtcNow,
-                DueDate = DateTime.UtcNow.AddDays(10),
-                IsPaid = false
-            }
-        ];
+        _contractor.Invoices.Add(new Invoice
+        {
+            ContractorId = _contractor.Id,
+            Amount = 1000m,
+            IssueDate = DateTime.UtcNow,
+            DueDate = DateTime.UtcNow.AddDays(10),
+            IsPaid = false
+        });
 
         var result = _model.CalculateRisk(_contractor);
 
