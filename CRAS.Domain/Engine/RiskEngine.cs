@@ -10,23 +10,23 @@ namespace CRAS.Domain.Engine;
 public interface IRiskEngine
 {
     /// <summary>
-    ///     Evaluates the financial risk of a contractor based on a specific financial statement.
+    ///     Asynchronously evaluates the risk of a contractor by combining financial statement analysis and behavioral models.
     /// </summary>
-    /// <param name="contractor">The contractor for whom risk assessment is being performed.</param>
-    /// <param name="statement">The financial statement data to be analyzed.</param>
-    /// <returns>An aggregated result containing scores from all active risk models and a final risk level.</returns>
-    AggregatedRiskResult Assess(Contractor contractor, FinancialStatement statement);
+    /// <param name="contractor">The contractor entity containing behavioral data such as invoice history.</param>
+    /// <param name="statement">The financial statement data to be analyzed by financial models.</param>
+    /// <returns>A task representing the asynchronous operation, containing the aggregated risk result.</returns>
+    Task<AggregatedRiskResult> AssessAsync(Contractor contractor, FinancialStatement statement);
 }
 
 /// <summary>
 ///     Provides the standard implementation of the risk assessment orchestration logic.
 /// </summary>
 /// <remarks>
-///     This engine uses a collection of injected risk models to perform individual evaluations
+///     This engine uses a collection of injected financial and behavioral risk models to perform evaluations
 ///     and applies a specified aggregation strategy to produce a unified conclusion.
 /// </remarks>
 /// <param name="riskModels">The collection of financial risk models to be executed.</param>
-/// <param name="behavioralRiskModels">The collection of behavioral risk models to be executed.</param>
+/// <param name="behavioralRiskModels">The collection of behavioral risk models to be executed asynchronously.</param>
 /// <param name="aggregationStrategy">The strategy used to consolidate multiple risk results into one.</param>
 public class RiskEngine(
     IEnumerable<IRiskModel> riskModels,
@@ -34,17 +34,22 @@ public class RiskEngine(
     IRiskAggregationStrategy aggregationStrategy) : IRiskEngine
 {
     /// <summary>
-    ///     Runs all registered risk models against the provided statement and aggregates the outcomes.
+    ///     Runs all registered financial and behavioral models and aggregates the outcomes into a single result.
     /// </summary>
-    /// <param name="contractor">The contractor for whom risk assessment is being performed.</param>
+    /// <param name="contractor">The contractor to assess.</param>
     /// <param name="statement">The financial statement to assess.</param>
     /// <returns>A consolidated <see cref="AggregatedRiskResult" />.</returns>
-    public AggregatedRiskResult Assess(Contractor contractor, FinancialStatement statement)
+    public async Task<AggregatedRiskResult> AssessAsync(Contractor contractor, FinancialStatement statement)
     {
         var individualResults = new List<RiskResult>();
 
         individualResults.AddRange(riskModels.Select(m => m.CalculateRisk(statement)));
-        individualResults.AddRange(behavioralRiskModels.Select(m => m.CalculateRisk(contractor)));
+
+        foreach (var model in behavioralRiskModels)
+        {
+            var result = await model.CalculateRiskAsync(contractor);
+            individualResults.Add(result);
+        }
 
         return aggregationStrategy.Aggregate(individualResults);
     }
