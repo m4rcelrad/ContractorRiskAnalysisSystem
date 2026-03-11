@@ -12,32 +12,32 @@ public class Invoice
     /// <summary>
     ///     Gets or sets the unique identifier for the invoice.
     /// </summary>
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     /// <summary>
     ///     Gets or sets the identifier of the contractor associated with this invoice.
     /// </summary>
-    public Guid ContractorId { get; set; }
+    public required Guid ContractorId { get; set; }
 
     /// <summary>
     ///     Gets or sets the total gross amount of the invoice.
     /// </summary>
-    public decimal Amount { get; set; }
+    public required decimal Amount { get; set; }
 
     /// <summary>
-    ///     Gets or sets the three-letter ISO currency code (e.g., PLN, EUR).
+    ///     Gets or sets the three-letter ISO currency code.
     /// </summary>
     public string Currency { get; set; } = "PLN";
 
     /// <summary>
     ///     Gets or sets the date when the invoice was issued.
     /// </summary>
-    public DateTime IssueDate { get; set; }
+    public required DateTime IssueDate { get; set; }
 
     /// <summary>
     ///     Gets or sets the formal deadline for payment.
     /// </summary>
-    public DateTime DueDate { get; set; }
+    public required DateTime DueDate { get; set; }
 
     /// <summary>
     ///     Gets or sets the actual date when the payment was received.
