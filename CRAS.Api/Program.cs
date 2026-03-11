@@ -1,3 +1,7 @@
+using CRAS.Domain.Engine;
+using CRAS.Domain.Interfaces;
+using CRAS.Domain.Services;
+using CRAS.Domain.Strategies;
 using CRAS.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +19,13 @@ public static class Program
 
         builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+        builder.Services.AddScoped<IRiskAggregationStrategy, MajorityVoteAggregation>();
+        builder.Services.AddScoped<IRiskModel, AltmanZScoreModel>();
+        builder.Services.AddScoped<IRiskModel, AltmanZDoublePrimeModel>();
+        builder.Services.AddScoped<IRiskModel, OhlsonOScoreModel>();
+
+        builder.Services.AddScoped<IRiskEngine, RiskEngine>();
 
         var app = builder.Build();
 
