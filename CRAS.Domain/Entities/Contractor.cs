@@ -38,7 +38,7 @@ public class Contractor
     /// </summary>
     /// <param name="taxId">The raw string representing the Tax ID.</param>
     /// <returns>True if the NIP has a valid 10-digit format and a correct checksum; otherwise, false.</returns>
-    private static bool IsValidTaxId(string taxId)
+    public static bool IsValidTaxId(string taxId)
     {
         if (string.IsNullOrWhiteSpace(taxId)) return false;
         var cleaned = taxId.Replace("-", "");
