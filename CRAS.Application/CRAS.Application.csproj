@@ -4,6 +4,10 @@
         <ProjectReference Include="..\CRAS.Domain\CRAS.Domain.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1"/>
+    </ItemGroup>
+
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
         <LangVersion>preview</LangVersion>
