@@ -9,10 +9,8 @@ namespace CRAS.Api.Models;
 /// </summary>
 public class RiskAssessmentResponse
 {
-    public Guid ContractorId { get; set; }
-    public string ContractorName { get; set; } = string.Empty;
-    public RiskLevel OverallRisk { get; set; }
-    public decimal OverallScore { get; set; }
-    public List<RiskResult> Breakdown { get; set; } = [ ];
-    public DateTime CalculatedAt { get; set; } = DateTime.UtcNow;
+    public Guid ContractorId { get; init; }
+    public string ContractorName { get; init; } = string.Empty;
+    public RiskLevel OverallRisk { get; init; }
+    public List<RiskResult> Breakdown { get; init; } = [];
 }
