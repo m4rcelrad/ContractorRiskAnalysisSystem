@@ -9,9 +9,9 @@ namespace CRAS.Domain.Interfaces;
 public interface IBehavioralRiskModel
 {
     /// <summary>
-    ///     Calculates the risk level based on the full profile and history of a specific contractor.
+    ///     Asynchronously evaluates the behavioral risk associated with a specific contractor.
     /// </summary>
-    /// <param name="contractor">The <see cref="Contractor" /> entity containing profile data and invoice history.</param>
-    /// <returns>A <see cref="RiskResult" /> representing the calculated behavioral risk.</returns>
-    RiskResult CalculateRisk(Contractor contractor);
+    /// <param name="contractor">The contractor entity containing the data to be analyzed, such as invoice history.</param>
+    /// <returns>A task representing the asynchronous operation, containing the calculated <see cref="RiskResult" />.</returns>
+    Task<RiskResult> CalculateRiskAsync(Contractor contractor);
 }

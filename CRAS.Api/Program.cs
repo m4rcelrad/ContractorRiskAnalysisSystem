@@ -3,6 +3,7 @@ using CRAS.Domain.Interfaces;
 using CRAS.Domain.Services;
 using CRAS.Domain.Strategies;
 using CRAS.Infrastructure.Data;
+using CRAS.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace CRAS.Api;
@@ -28,6 +29,8 @@ public static class Program
         builder.Services.AddScoped<IBehavioralRiskModel, PaymentDelayModel>();
 
         builder.Services.AddScoped<IRiskEngine, RiskEngine>();
+
+        builder.Services.AddHttpClient<IExchangeRateService, NbpExchangeRateService>();
 
         var app = builder.Build();
 

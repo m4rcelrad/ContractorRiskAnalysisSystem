@@ -37,7 +37,7 @@ public class ContractorsController(AppDbContext context, IRiskEngine riskEngine)
 
         if (latestStatement == null) return BadRequest("No financial statements available for this contractor.");
 
-        var result = riskEngine.Assess(contractor, latestStatement);
+        var result = await riskEngine.AssessAsync(contractor, latestStatement);
 
         var response = new RiskAssessmentResponse
         {
