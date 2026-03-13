@@ -13,6 +13,6 @@ public class RiskAssessmentResponse
     public string ContractorName { get; set; } = string.Empty;
     public RiskLevel OverallRisk { get; set; }
     public decimal OverallScore { get; set; }
-    public List<RiskResult> Breakdown { get; set; } = [];
+    public List<RiskResult> Breakdown { get; set; } = [ ];
     public DateTime CalculatedAt { get; set; } = DateTime.UtcNow;
 }

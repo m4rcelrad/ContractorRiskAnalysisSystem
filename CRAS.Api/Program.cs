@@ -1,9 +1,11 @@
+using CRAS.Application.Validators;
 using CRAS.Domain.Engine;
 using CRAS.Domain.Interfaces;
 using CRAS.Domain.Services;
 using CRAS.Domain.Strategies;
 using CRAS.Infrastructure.Data;
 using CRAS.Infrastructure.Services;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace CRAS.Api;
@@ -31,6 +33,8 @@ public static class Program
         builder.Services.AddScoped<IRiskEngine, RiskEngine>();
 
         builder.Services.AddHttpClient<IExchangeRateService, NbpExchangeRateService>();
+
+        builder.Services.AddValidatorsFromAssemblyContaining<AddInvoiceRequestValidator>();
 
         var app = builder.Build();
 
