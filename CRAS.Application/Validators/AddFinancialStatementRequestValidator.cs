@@ -49,5 +49,11 @@ public class AddFinancialStatementRequestValidator : AbstractValidator<AddFinanc
 
         RuleFor(x => x.PreviousNetIncome)
             .GreaterThan(0).WithMessage("PreviousNetIncome must be greater than 0.");
+
+        RuleFor(x => x.FundsFromOperations)
+            .GreaterThan(0).WithMessage("FundsFromOperations must be greater than 0.");
+
+        RuleFor(x => x.GNPPriceIndex)
+            .GreaterThan(0).WithMessage("GNPPriceIndex must be greater than 0.");
     }
 }

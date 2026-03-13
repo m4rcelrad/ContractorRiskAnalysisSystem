@@ -16,4 +16,6 @@ public class AddFinancialStatementRequest
     public decimal Sales { get; set; }
     public decimal NetIncome { get; set; }
     public decimal PreviousNetIncome { get; set; }
+    public decimal FundsFromOperations { get; set; }
+    public decimal GNPPriceIndex { get; set; }
 }
