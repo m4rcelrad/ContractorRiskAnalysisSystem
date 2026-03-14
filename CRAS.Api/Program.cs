@@ -1,3 +1,4 @@
+using System.Reflection;
 using CRAS.Application.Validators;
 using CRAS.Domain.Engine;
 using CRAS.Domain.Interfaces;
@@ -35,6 +36,13 @@ public static class Program
         builder.Services.AddHttpClient<IExchangeRateService, NbpExchangeRateService>();
 
         builder.Services.AddValidatorsFromAssemblyContaining<AddInvoiceRequestValidator>();
+
+        builder.Services.AddSwaggerGen(c =>
+        {
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            c.IncludeXmlComments(xmlPath);
+        });
 
         var app = builder.Build();
 
