@@ -1,4 +1,4 @@
-﻿using CRAS.Api.Models;
+﻿using CRAS.Application.Models;
 using CRAS.Application.Requests;
 using CRAS.Domain.Engine;
 using CRAS.Domain.Entities;

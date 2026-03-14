@@ -44,6 +44,16 @@ public static class Program
             c.IncludeXmlComments(xmlPath);
         });
 
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.WithOrigins("http://localhost:5000", "https://localhost:5001")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
+
         var app = builder.Build();
 
         if (app.Environment.IsDevelopment())
@@ -57,6 +67,8 @@ public static class Program
             dbContext.Database.Migrate();
             DataSeeder.Seed(dbContext);
         }
+
+        app.UseCors();
 
         app.UseHttpsRedirection();
         app.UseAuthorization();
