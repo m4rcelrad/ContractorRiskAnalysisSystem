@@ -131,7 +131,7 @@ public static class DataSeeder
     /// <returns>A string containing a valid tax ID.</returns>
     private static string GenerateValidTaxId(Randomizer randomizer)
     {
-        int[] weights = [6, 5, 7, 2, 3, 4, 5, 6, 7];
+        int[] weights = [ 6, 5, 7, 2, 3, 4, 5, 6, 7 ];
 
         while (true)
         {

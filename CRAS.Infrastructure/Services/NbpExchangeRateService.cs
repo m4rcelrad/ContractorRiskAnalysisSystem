@@ -58,7 +58,7 @@ public class NbpExchangeRateService(HttpClient httpClient) : IExchangeRateServic
     /// </summary>
     private class NbpResponse
     {
-        public List<NbpRate> Rates { get; init; } = [];
+        public List<NbpRate> Rates { get; init; } = [ ];
     }
 
     /// <summary>

@@ -44,7 +44,7 @@ public class Contractor
         var cleaned = taxId.Replace("-", "");
         if (cleaned.Length != 10 || !cleaned.All(char.IsDigit)) return false;
 
-        int[] weights = [6, 5, 7, 2, 3, 4, 5, 6, 7];
+        int[] weights = [ 6, 5, 7, 2, 3, 4, 5, 6, 7 ];
         var sum = 0;
         for (var i = 0; i < 9; i++)
             sum += (cleaned[i] - '0') * weights[i];

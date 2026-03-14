@@ -9,6 +9,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CRAS.Api.Controllers;
 
+/// <summary>
+///     Provides endpoints for managing contractors, invoices, financial statements and performing risk assessments.
+/// </summary>
+/// <param name="context"></param>
+/// <param name="riskEngine"></param>
+/// <param name="addInvoiceValidator"></param>
+/// <param name="addContractorValidator"></param>
+/// <param name="addFinancialStatementValidator"></param>
 [ApiController]
 [Route("api/[controller]")]
 public class ContractorsController(
@@ -18,6 +26,10 @@ public class ContractorsController(
     IValidator<AddContractorRequest> addContractorValidator,
     IValidator<AddFinancialStatementRequest> addFinancialStatementValidator) : ControllerBase
 {
+    /// <summary>
+    ///     Retrieves a list of all contractors, including their financial statements and invoices.
+    /// </summary>
+    /// <returns>A list of contractors with their full historical data.</returns>
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -29,6 +41,14 @@ public class ContractorsController(
         return Ok(contractors);
     }
 
+    /// <summary>
+    ///     Performs a risk assessment for a specific contractor based on their latest financial statement and payment history.
+    /// </summary>
+    /// <param name="id">The unique identifier of the contractor to assess.</param>
+    /// <returns>A detailed risk assessment response including overall risk level and breakdown by individual models.</returns>
+    /// <response code="200">Returns the calculated risk assessment.</response>
+    /// <response code="400">If the contractor has no financial statements to analyze.</response>
+    /// <response code="404">If the contractor with the specified ID is not found.</response>
     [HttpGet("{id:guid}/assess")]
     public async Task<IActionResult> AssessRisk(Guid id)
     {
@@ -58,6 +78,13 @@ public class ContractorsController(
         return Ok(response);
     }
 
+    /// <summary>
+    ///     Registers a new contractor in the system.
+    /// </summary>
+    /// <param name="request">The request body containing the Tax ID (NIP).</param>
+    /// <returns>The newly created contractor object.</returns>
+    /// <response code="201">The contractor was successfully created.</response>
+    /// <response code="400">If the validation for Tax ID format or checksum fails.</response>
     [HttpPost]
     public async Task<IActionResult> AddContractor([FromBody] AddContractorRequest request)
     {
@@ -79,6 +106,14 @@ public class ContractorsController(
         return Created($"/api/contractors/{contractor.Id}", contractor);
     }
 
+    /// <summary>
+    ///     Adds a new invoice to an existing contractor's record.
+    /// </summary>
+    /// <param name="id">The unique identifier of the contractor.</param>
+    /// <param name="request">Invoice details including amount, currency, and dates.</param>
+    /// <returns>The created invoice record.</returns>
+    /// <response code="201">The invoice was successfully added.</response>
+    /// <response code="404">If the specified contractor does not exist.</response>
     [HttpPost("{id:guid}/invoices")]
     public async Task<IActionResult> AddInvoice(Guid id, [FromBody] AddInvoiceRequest request)
     {
@@ -114,6 +149,14 @@ public class ContractorsController(
         return Created($"/api/contractors/{id}/invoices/{invoice.Id}", invoice);
     }
 
+    /// <summary>
+    ///     Adds a new annual financial statement for a specific contractor.
+    /// </summary>
+    /// <param name="id">The unique identifier of the contractor.</param>
+    /// <param name="request">Detailed financial data required for bankruptcy prediction models.</param>
+    /// <returns>The created financial statement record.</returns>
+    /// <response code="201">The statement was successfully recorded.</response>
+    /// <response code="404">If the specified contractor does not exist.</response>
     [HttpPost("{id:guid}/statements")]
     public async Task<IActionResult> AddFinancialStatement(Guid id, [FromBody] AddFinancialStatementRequest request)
     {

@@ -56,7 +56,7 @@ public class RiskEngineTests
 
         var strategyMock = new Mock<IRiskAggregationStrategy>();
 
-        var engine = new RiskEngine([financialModelMock.Object], [behavioralModelMock.Object], strategyMock.Object);
+        var engine = new RiskEngine([ financialModelMock.Object ], [ behavioralModelMock.Object ], strategyMock.Object);
 
         await engine.AssessAsync(contractor, statement);
 

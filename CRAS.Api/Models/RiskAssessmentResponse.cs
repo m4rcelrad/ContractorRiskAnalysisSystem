@@ -12,5 +12,5 @@ public class RiskAssessmentResponse
     public Guid ContractorId { get; init; }
     public string ContractorName { get; init; } = string.Empty;
     public RiskLevel OverallRisk { get; init; }
-    public List<RiskResult> Breakdown { get; init; } = [];
+    public List<RiskResult> Breakdown { get; init; } = [ ];
 }

@@ -20,7 +20,7 @@ public class PaymentDelayModelTests
     private readonly PaymentDelayModel _model;
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="PaymentDelayModelTests"/> class.
+    ///     Initializes a new instance of the <see cref="PaymentDelayModelTests" /> class.
     ///     Sets up a default mock for the exchange rate service returning a 1:1 rate.
     /// </summary>
     public PaymentDelayModelTests()

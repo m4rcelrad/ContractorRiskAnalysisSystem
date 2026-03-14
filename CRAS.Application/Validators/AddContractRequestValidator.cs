@@ -5,7 +5,7 @@ using FluentValidation;
 namespace CRAS.Application.Validators;
 
 /// <summary>
-/// Defines a validator for <see cref="AddContractorRequest"/>.
+///     Defines a validator for <see cref="AddContractorRequest" />.
 /// </summary>
 public class AddContractRequestValidator : AbstractValidator<AddContractorRequest>
 {

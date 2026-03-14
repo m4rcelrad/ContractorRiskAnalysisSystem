@@ -23,14 +23,11 @@ public class WorstCaseAggregation : IRiskAggregationStrategy
     ///     An <see cref="AggregatedRiskResult" /> containing the overall determined risk level
     ///     and the underlying individual results.
     /// </returns>
-    public AggregatedRiskResult Aggregate(IReadOnlyCollection<RiskResult> results)
+    public AggregatedRiskResult Aggregate(IReadOnlyCollection<RiskResult> results) => new()
     {
-        return new AggregatedRiskResult
-        {
-            OverallRiskLevel = DetermineOverallRisk(results),
-            IndividualResults = results
-        };
-    }
+        OverallRiskLevel = DetermineOverallRisk(results),
+        IndividualResults = results
+    };
 
     private static RiskLevel DetermineOverallRisk(IReadOnlyCollection<RiskResult> results)
     {
