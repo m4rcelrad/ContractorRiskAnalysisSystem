@@ -1,0 +1,38 @@
+.risk-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.risk-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.summary-card {
+    border-radius: 0.75rem;
+    border: none;
+    transition: transform 0.2s ease-in-out;
+}
+
+.summary-card:hover {
+    transform: scale(1.02);
+}
+
+.summary-icon {
+    font-size: 2.5rem;
+    opacity: 0.2;
+    position: absolute;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.model-list-item {
+    font-size: 0.85rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.model-list-item:last-child {
+    border-bottom: none;
+}

@@ -1,0 +1,164 @@
+﻿@page "/"
+@using System.Net
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using CRAS.Application.Models
+@using CRAS.Domain.Entities
+@using CRAS.Domain.Enums
+@inject HttpClient Http
+
+<PageTitle>Risk Dashboard</PageTitle>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Contractor Risk Dashboard</h1>
+        <button class="btn btn-primary" @onclick="RefreshData">
+            <i class="bi bi-arrow-clockwise"></i> Refresh Analysis
+        </button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(_errorMessage))
+    {
+        <div class="alert alert-danger">
+            <strong>Error loading data:</strong> @_errorMessage
+        </div>
+    }
+    else if (_contractorOverviews == null)
+    {
+        <div class="text-center mt-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Analyzing contractor data and calculating scores...</p>
+        </div>
+    }
+    else if (!_contractorOverviews.Any())
+    {
+        <div class="alert alert-info">
+            No contractors found in the system. Use the API or Seeder to add data.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var item in _contractorOverviews)
+            {
+                <div class="col-md-4 mb-4">
+                    <div
+                        class="card h-100 shadow-sm border-start border-5 border-@GetStatusColor(item.Assessment.OverallRisk)">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title mb-0">NIP: @item.Contractor.TaxId</h5>
+                                <span class="badge bg-@GetStatusColor(item.Assessment.OverallRisk)">
+                                    @item.Assessment.OverallRisk
+                                </span>
+                            </div>
+
+                            <p class="text-muted small">ID: @item.Contractor.Id</p>
+
+                            <h6 class="mt-3 mb-2 small fw-bold text-uppercase text-secondary">Model Breakdown</h6>
+                            <div class="list-group list-group-flush">
+                                @foreach (var result in item.Assessment.Breakdown)
+                                {
+                                    <div
+                                        class="list-group-item px-0 py-1 d-flex justify-content-between align-items-center border-0 small">
+                                        <span>@result.Model</span>
+                                        <span
+                                            class="text-@GetStatusColor(result.RiskLevel) fw-bold">@result.RiskLevel</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 d-flex gap-2">
+                            <a href="/contractors/@item.Contractor.Id" class="btn btn-sm btn-outline-secondary w-100">Details</a>
+                            <button class="btn btn-sm btn-outline-primary w-100">Report</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private List<ContractorData>? _contractorOverviews;
+    private string? _errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDashboardData();
+    }
+
+    private async Task RefreshData()
+    {
+        _contractorOverviews = null;
+        _errorMessage = null;
+        await LoadDashboardData();
+    }
+
+    private async Task LoadDashboardData()
+    {
+        try
+        {
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                Converters = { new JsonStringEnumConverter() }
+            };
+
+            var contractors = await Http.GetFromJsonAsync<List<Contractor>>("api/Contractors", options);
+
+            if (contractors != null)
+            {
+                var overviews = new List<ContractorData>();
+
+                foreach (var contractor in contractors)
+                {
+                    try
+                    {
+                        var assessment = await Http.GetFromJsonAsync<RiskAssessmentResponse>($"api/Contractors/{contractor.Id}/assess", options);
+
+                        if (assessment != null)
+                        {
+                            overviews.Add(new ContractorData
+                            {
+                                Contractor = contractor,
+                                Assessment = assessment
+                            });
+                        }
+                    }
+                    catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+                    {
+                    }
+                    catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                    }
+                }
+
+                _contractorOverviews = overviews;
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = ex.Message;
+        }
+    }
+
+    private static string GetStatusColor(RiskLevel level)
+    {
+        return level switch
+        {
+            RiskLevel.Safe => "success",
+            RiskLevel.Grey => "warning",
+            RiskLevel.Distress => "danger",
+            _ => "secondary"
+        };
+    }
+
+    private class ContractorData
+    {
+        public Contractor Contractor { get; init; } = null!;
+        public RiskAssessmentResponse Assessment { get; init; } = null!;
+    }
+
+}
