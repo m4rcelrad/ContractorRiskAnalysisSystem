@@ -10,7 +10,7 @@ public class FinancialStatement
     /// <summary>
     ///     Gets the unique identifier for the financial statement.
     /// </summary>
-    public Guid Id { get; private set; } = Guid.NewGuid();
+    public Guid Id { get; init; } = Guid.NewGuid();
 
     /// <summary>
     ///     Gets or sets the identifier of the contractor associated with the financial statement.

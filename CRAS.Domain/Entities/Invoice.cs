@@ -1,4 +1,6 @@
-﻿namespace CRAS.Domain.Entities;
+﻿using System.Text.Json.Serialization;
+
+namespace CRAS.Domain.Entities;
 
 /// <summary>
 ///     Represents a financial invoice issued to a contractor, used for behavioral risk tracking.
@@ -12,7 +14,7 @@ public class Invoice
     /// <summary>
     ///     Gets or sets the unique identifier for the invoice.
     /// </summary>
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; init; } = Guid.NewGuid();
 
     /// <summary>
     ///     Gets or sets the identifier of the contractor associated with this invoice.
@@ -53,6 +55,7 @@ public class Invoice
     /// <summary>
     ///     Gets the navigation property to the associated contractor.
     /// </summary>
+    [JsonIgnore]
     public Contractor Contractor { get; set; } = null!;
 
     /// <summary>

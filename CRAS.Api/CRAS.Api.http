@@ -1,6 +1,11 @@
-@CRAS.Api_HostAddress = http://localhost:5248
+@HostAddress = http://localhost:5250
 
-GET {{CRAS.Api_HostAddress}}/weatherforecast/
+GET {{HostAddress}}/api/contractors
+Accept: application/json
+
+###
+
+GET {{HostAddress}}/api/contractors/09e5bc0f-0ab5-42c1-9ac7-086a81ddf40a/assess
 Accept: application/json
 
 ###

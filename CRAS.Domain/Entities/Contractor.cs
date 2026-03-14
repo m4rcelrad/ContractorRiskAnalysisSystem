@@ -8,7 +8,7 @@ public class Contractor
     /// <summary>
     ///     Gets the unique identifier for the contractor.
     /// </summary>
-    public Guid Id { get; private set; } = Guid.NewGuid();
+    public Guid Id { get; init; } = Guid.NewGuid();
 
     /// <summary>
     ///     Gets the contractor's Tax Identification Number (NIP for Polish entities).
