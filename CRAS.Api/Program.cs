@@ -61,6 +61,9 @@ public static class Program
             });
         });
 
+        builder.Services.AddOutputCache();
+        builder.Services.AddEndpointsApiExplorer();
+
         var app = builder.Build();
 
         if (app.Environment.IsDevelopment())

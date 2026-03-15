@@ -5,6 +5,7 @@ using CRAS.Domain.Entities;
 using CRAS.Infrastructure.Data;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 
 namespace CRAS.Api.Controllers;
@@ -208,6 +209,7 @@ public class ContractorsController(
     /// </summary>
     /// <returns>A list containing dashboard overviews for all contractors.</returns>
     [HttpGet("dashboard")]
+    [OutputCache(Duration = 60)]
     public async Task<IActionResult> GetDashboard()
     {
         var contractors = await context.Contractors
@@ -253,6 +255,7 @@ public class ContractorsController(
     /// <param name="id">The unique identifier of the contractor.</param>
     /// <returns>An HTTP response containing the contractor's details if found, or a "Not Found" status if the contractor does not exist.</returns>
     [HttpGet("{id:guid}")]
+    [OutputCache(Duration = 60)]
     public async Task<IActionResult> GetContractor(Guid id)
     {
         var contractor = await context.Contractors
