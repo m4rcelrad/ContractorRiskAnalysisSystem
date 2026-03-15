@@ -1,0 +1,216 @@
+﻿@page "/contractors/{Id:guid}"
+@using CRAS.Domain.Entities
+@using CRAS.Domain.Enums
+@using CRAS.Application.Models
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@inject HttpClient Http
+
+<PageTitle>Contractor Report</PageTitle>
+
+<div class="container-fluid mt-4 px-4">
+    <div class="mb-4 d-flex justify-content-between align-items-center">
+        <div>
+            <a href="/" class="text-decoration-none text-muted mb-2 d-inline-block">
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
+            </a>
+            <h2 class="fw-bold mb-0">
+                Contractor Report
+                @if (_contractor != null)
+                {
+                    <span class="text-primary">#@_contractor.TaxId</span>
+                }
+            </h2>
+        </div>
+        @if (_assessment != null)
+        {
+            <div class="text-end">
+                <span class="text-muted small d-block text-uppercase fw-bold">Overall Status</span>
+                <span class="badge bg-@GetStatusColor(_assessment.OverallRisk) fs-5 px-4 py-2 rounded-pill shadow-sm">
+                    @_assessment.OverallRisk
+                </span>
+            </div>
+        }
+    </div>
+
+    @if (_isLoading)
+    {
+        <div class="d-flex justify-content-center my-5">
+            <div class="spinner-border text-primary" role="status"></div>
+        </div>
+    }
+    else if (_contractor != null && _assessment != null)
+    {
+        var latestStatement = _contractor.FinancialStatements.OrderByDescending(s => s.Year).FirstOrDefault();
+
+        <div class="row g-4 mb-4">
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-white border-0 pt-4 pb-0">
+                        <h6 class="fw-bold text-uppercase text-muted mb-0">Risk Models Assessment</h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            @foreach (var result in _assessment.Breakdown)
+                            {
+                                <li class="list-group-item px-0 d-flex justify-content-between align-items-center border-0 mb-2">
+                                    <div>
+                                        <span class="fw-bold d-block">@result.Model</span>
+                                        <span class="text-muted small">Score: @result.Score.ToString("F3")</span>
+                                    </div>
+                                    <span class="badge bg-@GetStatusColor(result.RiskLevel)-subtle text-@GetStatusColor(result.RiskLevel) border border-@GetStatusColor(result.RiskLevel) px-3 py-2">
+                                        @result.RiskLevel
+                                    </span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            @if (latestStatement != null)
+            {
+                <div class="col-lg-8">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-header bg-white border-0 pt-4 pb-0">
+                            <h6 class="fw-bold text-uppercase text-muted mb-0">Key Financial Ratios (@latestStatement.Year)</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-light rounded-3">
+                                        <span class="text-muted small text-uppercase fw-bold">Current Ratio</span>
+                                        <h3 class="mb-0 text-dark">@CalculateRatio(latestStatement.CurrentAssets, latestStatement.CurrentLiabilities).ToString("F2")</h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-light rounded-3">
+                                        <span class="text-muted small text-uppercase fw-bold">Debt Ratio</span>
+                                        <h3 class="mb-0 text-dark">@CalculateRatio(latestStatement.TotalLiabilities, latestStatement.TotalAssets).ToString("P1")</h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-light rounded-3">
+                                        <span class="text-muted small text-uppercase fw-bold">Return on Equity</span>
+                                        <h3 class="mb-0 text-dark">@CalculateRatio(latestStatement.NetIncome, latestStatement.BookValueEquity).ToString("P1")</h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-light rounded-3">
+                                        <span class="text-muted small text-uppercase fw-bold">Working Capital / Assets</span>
+                                        <h3 class="mb-0 text-dark">@CalculateRatio(latestStatement.WorkingCapital, latestStatement.TotalAssets).ToString("P1")</h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-light rounded-3">
+                                        <span class="text-muted small text-uppercase fw-bold">Asset Turnover</span>
+                                        <h3 class="mb-0 text-dark">@CalculateRatio(latestStatement.Sales, latestStatement.TotalAssets).ToString("F2")</h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-light rounded-3">
+                                        <span class="text-muted small text-uppercase fw-bold">EBIT Margin</span>
+                                        <h3 class="mb-0 text-dark">@CalculateRatio(latestStatement.EBIT, latestStatement.Sales).ToString("P1")</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white border-0 pt-4 pb-0">
+                <h6 class="fw-bold text-uppercase text-muted mb-0">Financial Statement History</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light text-muted small text-uppercase">
+                            <tr>
+                                <th>Year</th>
+                                <th>Total Assets</th>
+                                <th>Total Liabilities</th>
+                                <th>Working Capital</th>
+                                <th>EBIT</th>
+                                <th>Sales</th>
+                                <th>Net Income</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var statement in _contractor.FinancialStatements.OrderByDescending(s => s.Year))
+                            {
+                                <tr>
+                                    <td class="fw-bold">@statement.Year</td>
+                                    <td>@statement.TotalAssets.ToString("C0")</td>
+                                    <td>@statement.TotalLiabilities.ToString("C0")</td>
+                                    <td>@statement.WorkingCapital.ToString("C0")</td>
+                                    <td>@statement.EBIT.ToString("C0")</td>
+                                    <td>@statement.Sales.ToString("C0")</td>
+                                    <td class="fw-semibold text-@(statement.NetIncome >= 0 ? "success" : "danger")">
+                                        @statement.NetIncome.ToString("C0")
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private Contractor? _contractor;
+    private RiskAssessmentResponse? _assessment;
+    private bool _isLoading = true;
+    private string? _errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                Converters = { new JsonStringEnumConverter() }
+            };
+
+            _contractor = await Http.GetFromJsonAsync<Contractor>($"api/Contractors/{Id}", options);
+
+            try
+            {
+                _assessment = await Http.GetFromJsonAsync<RiskAssessmentResponse>($"api/Contractors/{Id}/assess", options);
+            }
+            catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound || ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = ex.Message;
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private static string GetStatusColor(RiskLevel level) => level switch
+    {
+        RiskLevel.Safe => "success",
+        RiskLevel.Grey => "warning",
+        RiskLevel.Distress => "danger",
+        _ => "secondary"
+    };
+
+    private static decimal CalculateRatio(decimal numerator, decimal denominator)
+    {
+        if (denominator == 0) return 0m;
+        return numerator / denominator;
+    }
+}

@@ -246,4 +246,22 @@ public class ContractorsController(
 
         return Ok(overviews);
     }
+
+    /// <summary>
+    /// Retrieves details of a specific contractor by their unique identifier, including associated financial statements and invoices.
+    /// </summary>
+    /// <param name="id">The unique identifier of the contractor.</param>
+    /// <returns>An HTTP response containing the contractor's details if found, or a "Not Found" status if the contractor does not exist.</returns>
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetContractor(Guid id)
+    {
+        var contractor = await context.Contractors
+            .Include(c => c.FinancialStatements)
+            .Include(c => c.Invoices)
+            .FirstOrDefaultAsync(c => c.Id == id);
+
+        if (contractor == null) return NotFound();
+
+        return Ok(contractor);
+    }
 }
