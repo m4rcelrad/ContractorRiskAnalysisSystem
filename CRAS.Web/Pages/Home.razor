@@ -68,7 +68,7 @@
                         <div
                             class="card summary-card shadow-sm bg-success text-white h-100 position-relative overflow-hidden">
                             <div class="card-body">
-                                <h6 class="text-uppercase fw-semibold mb-1 opacity-75">Low Status</h6>
+                                <h6 class="text-uppercase fw-semibold mb-1 opacity-75">Low Risk</h6>
                                 <h2 class="fw-bold mb-0">@DashboardState.Overviews.Count(c => c.Assessment.OverallRisk == RiskLevel.Low)</h2>
                                 <i class="bi bi-shield-check summary-icon"></i>
                             </div>
@@ -88,7 +88,7 @@
                         <div
                             class="card summary-card shadow-sm bg-danger text-white h-100 position-relative overflow-hidden">
                             <div class="card-body">
-                                <h6 class="text-uppercase fw-semibold mb-1 opacity-75">High Risk / Critical</h6>
+                                <h6 class="text-uppercase fw-semibold mb-1 opacity-75">High Risk</h6>
                                 <h2 class="fw-bold mb-0">@DashboardState.Overviews.Count(c => c.Assessment.OverallRisk == RiskLevel.Critical)</h2>
                                 <i class="bi bi-exclamation-octagon-fill summary-icon"></i>
                             </div>
