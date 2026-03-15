@@ -8,7 +8,7 @@ public class Contractor
     /// <summary>
     ///     Gets the unique identifier for the contractor.
     /// </summary>
-    public Guid Id { get; private set; } = Guid.NewGuid();
+    public Guid Id { get; init; } = Guid.NewGuid();
 
     /// <summary>
     ///     Gets the contractor's Tax Identification Number (NIP for Polish entities).
@@ -23,15 +23,15 @@ public class Contractor
     }
 
     /// <summary>
-    ///     Gets the collection of financial statements associated with the contractor.
+    ///     Gets or sets the collection of financial statements associated with the contractor.
     /// </summary>
-    public ICollection<FinancialStatement> FinancialStatements { get; private set; } =
+    public ICollection<FinancialStatement> FinancialStatements { get; set; } =
         new HashSet<FinancialStatement>();
 
     /// <summary>
-    ///     Gets the collection of invoices associated with this contractor.
+    ///     Gets or sets the collection of invoices associated with this contractor.
     /// </summary>
-    public ICollection<Invoice> Invoices { get; private set; } = new List<Invoice>();
+    public ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
 
     /// <summary>
     ///     Validates a Polish Tax Identification Number (NIP) using standard weights and checksum algorithms.

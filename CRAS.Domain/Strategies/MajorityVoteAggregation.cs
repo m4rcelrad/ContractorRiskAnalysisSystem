@@ -9,9 +9,9 @@ namespace CRAS.Domain.Strategies;
 /// </summary>
 /// <remarks>
 ///     This strategy determines the overall risk level by requiring at least two individual models
-///     to agree on a <see cref="RiskLevel.Safe" /> or <see cref="RiskLevel.Distress" /> classification.
+///     to agree on a <see cref="RiskLevel.Low" /> or <see cref="RiskLevel.Critical" /> classification.
 ///     If no clear majority is reached, or if the result set is empty, it securely defaults to
-///     <see cref="RiskLevel.Grey" />.
+///     <see cref="RiskLevel.Moderate" />.
 /// </remarks>
 public class MajorityVoteAggregation : IRiskAggregationStrategy
 {
@@ -31,12 +31,12 @@ public class MajorityVoteAggregation : IRiskAggregationStrategy
 
     private static RiskLevel DetermineOverallRisk(IReadOnlyCollection<RiskResult> results)
     {
-        if (results.Count == 0) return RiskLevel.Grey;
+        if (results.Count == 0) return RiskLevel.Moderate;
 
-        var distressCount = results.Count(r => r.RiskLevel == RiskLevel.Distress);
-        var safeCount = results.Count(r => r.RiskLevel == RiskLevel.Safe);
+        var distressCount = results.Count(r => r.RiskLevel == RiskLevel.Critical);
+        var safeCount = results.Count(r => r.RiskLevel == RiskLevel.Low);
 
-        if (distressCount >= 2) return RiskLevel.Distress;
-        return safeCount >= 2 ? RiskLevel.Safe : RiskLevel.Grey;
+        if (distressCount >= 2) return RiskLevel.Critical;
+        return safeCount >= 2 ? RiskLevel.Low : RiskLevel.Moderate;
     }
 }

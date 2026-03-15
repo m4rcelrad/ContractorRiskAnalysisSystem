@@ -30,11 +30,11 @@ public class WeightedScoreAggregationTests
 
         var aggregated = strategy.Aggregate(
         [
-            new RiskResult { Model = "ImportantModel", RiskLevel = RiskLevel.Distress },
-            new RiskResult { Model = "MinorModel", RiskLevel = RiskLevel.Safe }
+            new RiskResult { Model = "ImportantModel", RiskLevel = RiskLevel.Critical },
+            new RiskResult { Model = "MinorModel", RiskLevel = RiskLevel.Low }
         ]);
 
-        Assert.Equal(RiskLevel.Distress, aggregated.OverallRiskLevel);
+        Assert.Equal(RiskLevel.Critical, aggregated.OverallRiskLevel);
     }
 
     /// <summary>
@@ -48,9 +48,9 @@ public class WeightedScoreAggregationTests
 
         var aggregated = strategy.Aggregate(
         [
-            new RiskResult { Model = "UnknownModel", RiskLevel = RiskLevel.Safe }
+            new RiskResult { Model = "UnknownModel", RiskLevel = RiskLevel.Low }
         ]);
 
-        Assert.Equal(RiskLevel.Safe, aggregated.OverallRiskLevel);
+        Assert.Equal(RiskLevel.Low, aggregated.OverallRiskLevel);
     }
 }

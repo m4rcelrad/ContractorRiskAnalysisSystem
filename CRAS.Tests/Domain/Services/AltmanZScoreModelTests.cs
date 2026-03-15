@@ -10,7 +10,7 @@ namespace CRAS.Tests.Domain.Services;
 /// <remarks>
 ///     This test suite verifies the accurate calculation of risk scores for public manufacturing companies.
 ///     It covers mathematical edge cases (like division by zero) and validates the classification
-///     thresholds for Safe, Grey, and Distress zones.
+///     thresholds for Low, Moderate, and Critical zones.
 /// </remarks>
 public class AltmanZScoreModelTests
 {
@@ -60,7 +60,7 @@ public class AltmanZScoreModelTests
         var result = _model.CalculateRisk(statement);
 
         Assert.Equal("Altman Z-Score", result.Model);
-        Assert.Equal(RiskLevel.Safe, result.RiskLevel);
+        Assert.Equal(RiskLevel.Low, result.RiskLevel);
         Assert.True(result.Score > 2.99m);
     }
 
@@ -82,7 +82,7 @@ public class AltmanZScoreModelTests
 
         var result = _model.CalculateRisk(statement);
 
-        Assert.Equal(RiskLevel.Distress, result.RiskLevel);
+        Assert.Equal(RiskLevel.Critical, result.RiskLevel);
         Assert.True(result.Score < 1.81m);
     }
 

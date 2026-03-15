@@ -1,7 +1,7 @@
 ﻿using CRAS.Domain.Enums;
 using CRAS.Domain.Models;
 
-namespace CRAS.Api.Models;
+namespace CRAS.Application.Models;
 
 /// <summary>
 ///     Represents a response containing the result of a contractor's risk assessment.

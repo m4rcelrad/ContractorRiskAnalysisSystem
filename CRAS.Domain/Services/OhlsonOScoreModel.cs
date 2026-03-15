@@ -65,9 +65,9 @@ public class OhlsonOScoreModel : IRiskModel
 
         var riskLevel = decimalProbability switch
         {
-            < 0.20m => RiskLevel.Safe,
-            >= 0.20m and <= 0.50m => RiskLevel.Grey,
-            _ => RiskLevel.Distress
+            < 0.20m => RiskLevel.Low,
+            >= 0.20m and <= 0.50m => RiskLevel.Moderate,
+            _ => RiskLevel.Critical
         };
 
         return new RiskResult

@@ -9,9 +9,9 @@ namespace CRAS.Domain.Strategies;
 /// </summary>
 /// <remarks>
 ///     This highly conservative strategy prioritizes safety by determining the overall risk level as
-///     <see cref="RiskLevel.Distress" /> if even a single individual model indicates distress.
-///     It requires unanimous agreement among all models to classify the risk as <see cref="RiskLevel.Safe" />,
-///     otherwise securely defaulting to <see cref="RiskLevel.Grey" />.
+///     <see cref="RiskLevel.Critical" /> if even a single individual model indicates distress.
+///     It requires unanimous agreement among all models to classify the risk as <see cref="RiskLevel.Low" />,
+///     otherwise securely defaulting to <see cref="RiskLevel.Moderate" />.
 /// </remarks>
 public class WorstCaseAggregation : IRiskAggregationStrategy
 {
@@ -31,10 +31,10 @@ public class WorstCaseAggregation : IRiskAggregationStrategy
 
     private static RiskLevel DetermineOverallRisk(IReadOnlyCollection<RiskResult> results)
     {
-        if (results.Count == 0) return RiskLevel.Grey;
+        if (results.Count == 0) return RiskLevel.Moderate;
 
-        if (results.Any(r => r.RiskLevel == RiskLevel.Distress)) return RiskLevel.Distress;
+        if (results.Any(r => r.RiskLevel == RiskLevel.Critical)) return RiskLevel.Critical;
 
-        return results.All(r => r.RiskLevel == RiskLevel.Safe) ? RiskLevel.Safe : RiskLevel.Grey;
+        return results.All(r => r.RiskLevel == RiskLevel.Low) ? RiskLevel.Low : RiskLevel.Moderate;
     }
 }

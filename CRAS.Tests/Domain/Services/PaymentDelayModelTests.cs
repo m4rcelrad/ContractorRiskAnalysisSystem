@@ -31,7 +31,7 @@ public class PaymentDelayModelTests
     }
 
     /// <summary>
-    ///     Verifies that the model returns <see cref="RiskLevel.Safe" /> when the weighted
+    ///     Verifies that the model returns <see cref="RiskLevel.Low" /> when the weighted
     ///     average delay is within the safe threshold (less than 5 days).
     /// </summary>
     [Fact]
@@ -61,12 +61,12 @@ public class PaymentDelayModelTests
 
         var result = await _model.CalculateRiskAsync(_contractor);
 
-        Assert.Equal(RiskLevel.Safe, result.RiskLevel);
+        Assert.Equal(RiskLevel.Low, result.RiskLevel);
         Assert.True(result.Score < 5m);
     }
 
     /// <summary>
-    ///     Verifies that the model returns <see cref="RiskLevel.Distress" /> when a high-value invoice
+    ///     Verifies that the model returns <see cref="RiskLevel.Critical" /> when a high-value invoice
     ///     is significantly overdue, even if other smaller invoices were paid on time.
     /// </summary>
     [Fact]
@@ -95,11 +95,11 @@ public class PaymentDelayModelTests
 
         var result = await _model.CalculateRiskAsync(_contractor);
 
-        Assert.Equal(RiskLevel.Distress, result.RiskLevel);
+        Assert.Equal(RiskLevel.Critical, result.RiskLevel);
     }
 
     /// <summary>
-    ///     Verifies that the model returns <see cref="RiskLevel.Grey" /> when the weighted
+    ///     Verifies that the model returns <see cref="RiskLevel.Moderate" /> when the weighted
     ///     average delay falls between the safe and distress thresholds.
     /// </summary>
     [Fact]
@@ -118,12 +118,12 @@ public class PaymentDelayModelTests
 
         var result = await _model.CalculateRiskAsync(_contractor);
 
-        Assert.Equal(RiskLevel.Grey, result.RiskLevel);
+        Assert.Equal(RiskLevel.Moderate, result.RiskLevel);
         Assert.Equal(10m, result.Score);
     }
 
     /// <summary>
-    ///     Verifies that the model returns <see cref="RiskLevel.Grey" /> when no relevant
+    ///     Verifies that the model returns <see cref="RiskLevel.Moderate" /> when no relevant
     ///     invoices (paid or overdue) are available for analysis.
     /// </summary>
     [Fact]
@@ -141,6 +141,6 @@ public class PaymentDelayModelTests
 
         var result = await _model.CalculateRiskAsync(_contractor);
 
-        Assert.Equal(RiskLevel.Grey, result.RiskLevel);
+        Assert.Equal(RiskLevel.Moderate, result.RiskLevel);
     }
 }

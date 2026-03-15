@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRAS.Api", "CRAS.Api\CRAS.A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRAS.Tests", "CRAS.Tests\CRAS.Tests.csproj", "{44CBAD7F-626D-4F73-BD15-B411FEB0F513}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRAS.Web", "CRAS.Web\CRAS.Web.csproj", "{59517EC6-3F32-4C02-B841-E34B636D29F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,18 @@ Global
 		{44CBAD7F-626D-4F73-BD15-B411FEB0F513}.Release|x64.Build.0 = Release|Any CPU
 		{44CBAD7F-626D-4F73-BD15-B411FEB0F513}.Release|x86.ActiveCfg = Release|Any CPU
 		{44CBAD7F-626D-4F73-BD15-B411FEB0F513}.Release|x86.Build.0 = Release|Any CPU
+		{59517EC6-3F32-4C02-B841-E34B636D29F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59517EC6-3F32-4C02-B841-E34B636D29F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59517EC6-3F32-4C02-B841-E34B636D29F0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{59517EC6-3F32-4C02-B841-E34B636D29F0}.Debug|x64.Build.0 = Debug|Any CPU
+		{59517EC6-3F32-4C02-B841-E34B636D29F0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{59517EC6-3F32-4C02-B841-E34B636D29F0}.Debug|x86.Build.0 = Debug|Any CPU
+		{59517EC6-3F32-4C02-B841-E34B636D29F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59517EC6-3F32-4C02-B841-E34B636D29F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59517EC6-3F32-4C02-B841-E34B636D29F0}.Release|x64.ActiveCfg = Release|Any CPU
+		{59517EC6-3F32-4C02-B841-E34B636D29F0}.Release|x64.Build.0 = Release|Any CPU
+		{59517EC6-3F32-4C02-B841-E34B636D29F0}.Release|x86.ActiveCfg = Release|Any CPU
+		{59517EC6-3F32-4C02-B841-E34B636D29F0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

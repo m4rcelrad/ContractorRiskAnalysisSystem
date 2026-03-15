@@ -1,4 +1,6 @@
-﻿namespace CRAS.Domain.Entities;
+﻿using System.Text.Json.Serialization;
+
+namespace CRAS.Domain.Entities;
 
 /// <summary>
 ///     Representation of a financial statement.
@@ -8,7 +10,7 @@ public class FinancialStatement
     /// <summary>
     ///     Gets the unique identifier for the financial statement.
     /// </summary>
-    public Guid Id { get; private set; } = Guid.NewGuid();
+    public Guid Id { get; init; } = Guid.NewGuid();
 
     /// <summary>
     ///     Gets or sets the identifier of the contractor associated with the financial statement.
@@ -53,6 +55,7 @@ public class FinancialStatement
     /// <summary>
     ///     Gets the Earnings Before Interest and Taxes (EBIT), reflecting operational profitability.
     /// </summary>
+    // ReSharper disable once InconsistentNaming
     public required decimal EBIT { get; init; }
 
     /// <summary>
@@ -88,10 +91,12 @@ public class FinancialStatement
     /// <summary>
     ///     Gets the Gross National Product (GNP) price index level applicable for the given fiscal year.
     /// </summary>
+    // ReSharper disable once InconsistentNaming
     public required decimal GNPPriceIndex { get; init; }
 
     /// <summary>
     ///     Gets the navigation property to the associated contractor.
     /// </summary>
+    [JsonIgnore]
     public Contractor Contractor { get; set; } = null!;
 }

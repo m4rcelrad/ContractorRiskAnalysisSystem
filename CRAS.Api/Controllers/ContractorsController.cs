@@ -1,10 +1,11 @@
-﻿using CRAS.Api.Models;
+﻿using CRAS.Application.Models;
 using CRAS.Application.Requests;
 using CRAS.Domain.Engine;
 using CRAS.Domain.Entities;
 using CRAS.Infrastructure.Data;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 
 namespace CRAS.Api.Controllers;
@@ -200,5 +201,70 @@ public class ContractorsController(
         await context.SaveChangesAsync();
 
         return Created($"/api/contractors/{id}/statements/{statement.Id}", statement);
+    }
+
+    /// <summary>
+    ///     Retrieves an overview of all contractors, including their risk assessments
+    ///     and latest financial statements.
+    /// </summary>
+    /// <returns>A list containing dashboard overviews for all contractors.</returns>
+    [HttpGet("dashboard")]
+    [OutputCache(Duration = 60)]
+    public async Task<IActionResult> GetDashboard()
+    {
+        var contractors = await context.Contractors
+            .Include(c => c.FinancialStatements)
+            .Include(c => c.Invoices)
+            .ToListAsync();
+
+        var overviews = new List<DashboardOverviewResponse>();
+
+        foreach (var contractor in contractors)
+        {
+            var latestStatement = contractor.FinancialStatements
+                .OrderByDescending(s => s.Year)
+                .FirstOrDefault();
+
+            if (latestStatement == null)
+            {
+                continue;
+            }
+
+            var result = await riskEngine.AssessAsync(contractor, latestStatement);
+
+            overviews.Add(new DashboardOverviewResponse
+            {
+                ContractorId = contractor.Id,
+                TaxId = contractor.TaxId,
+                Assessment = new RiskAssessmentResponse
+                {
+                    ContractorId = contractor.Id,
+                    ContractorName = $"Contractor {contractor.TaxId}",
+                    OverallRisk = result.OverallRiskLevel,
+                    Breakdown = result.IndividualResults.ToList()
+                }
+            });
+        }
+
+        return Ok(overviews);
+    }
+
+    /// <summary>
+    /// Retrieves details of a specific contractor by their unique identifier, including associated financial statements and invoices.
+    /// </summary>
+    /// <param name="id">The unique identifier of the contractor.</param>
+    /// <returns>An HTTP response containing the contractor's details if found, or a "Not Found" status if the contractor does not exist.</returns>
+    [HttpGet("{id:guid}")]
+    [OutputCache(Duration = 60)]
+    public async Task<IActionResult> GetContractor(Guid id)
+    {
+        var contractor = await context.Contractors
+            .Include(c => c.FinancialStatements)
+            .Include(c => c.Invoices)
+            .FirstOrDefaultAsync(c => c.Id == id);
+
+        if (contractor == null) return NotFound();
+
+        return Ok(contractor);
     }
 }

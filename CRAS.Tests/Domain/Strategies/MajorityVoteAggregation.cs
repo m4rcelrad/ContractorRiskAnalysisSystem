@@ -23,44 +23,44 @@ public class MajorityVoteAggregationTests
     private readonly MajorityVoteAggregation _strategy = new();
 
     /// <summary>
-    ///     Verifies that the strategy returns <see cref="RiskLevel.Distress" /> when at least two models indicate distress.
+    ///     Verifies that the strategy returns <see cref="RiskLevel.Critical" /> when at least two models indicate distress.
     /// </summary>
     [Fact]
     public void Aggregate_ReturnsDistress_WhenAtLeastTwoModelsAreDistress()
     {
         RiskResult[] results =
         [
-            new() { Model = "M1", RiskLevel = RiskLevel.Distress },
-            new() { Model = "M2", RiskLevel = RiskLevel.Distress },
-            new() { Model = "M3", RiskLevel = RiskLevel.Safe }
+            new() { Model = "M1", RiskLevel = RiskLevel.Critical },
+            new() { Model = "M2", RiskLevel = RiskLevel.Critical },
+            new() { Model = "M3", RiskLevel = RiskLevel.Low }
         ];
 
         var aggregated = _strategy.Aggregate(results);
 
-        Assert.Equal(RiskLevel.Distress, aggregated.OverallRiskLevel);
+        Assert.Equal(RiskLevel.Critical, aggregated.OverallRiskLevel);
         Assert.Equal(3, aggregated.IndividualResults.Count);
     }
 
     /// <summary>
-    ///     Verifies that the strategy returns <see cref="RiskLevel.Safe" /> when at least two models indicate safe status.
+    ///     Verifies that the strategy returns <see cref="RiskLevel.Low" /> when at least two models indicate safe status.
     /// </summary>
     [Fact]
     public void Aggregate_ReturnsSafe_WhenAtLeastTwoModelsAreSafe()
     {
         RiskResult[] results =
         [
-            new() { Model = "M1", RiskLevel = RiskLevel.Safe },
-            new() { Model = "M2", RiskLevel = RiskLevel.Safe },
-            new() { Model = "M3", RiskLevel = RiskLevel.Grey }
+            new() { Model = "M1", RiskLevel = RiskLevel.Low },
+            new() { Model = "M2", RiskLevel = RiskLevel.Low },
+            new() { Model = "M3", RiskLevel = RiskLevel.Moderate }
         ];
 
         var aggregated = _strategy.Aggregate(results);
 
-        Assert.Equal(RiskLevel.Safe, aggregated.OverallRiskLevel);
+        Assert.Equal(RiskLevel.Low, aggregated.OverallRiskLevel);
     }
 
     /// <summary>
-    ///     Verifies that the strategy returns <see cref="RiskLevel.Grey" /> when there is no clear majority
+    ///     Verifies that the strategy returns <see cref="RiskLevel.Moderate" /> when there is no clear majority
     ///     between safe and distress outcomes.
     /// </summary>
     [Fact]
@@ -68,18 +68,18 @@ public class MajorityVoteAggregationTests
     {
         RiskResult[] results =
         [
-            new() { Model = "M1", RiskLevel = RiskLevel.Safe },
-            new() { Model = "M2", RiskLevel = RiskLevel.Distress },
-            new() { Model = "M3", RiskLevel = RiskLevel.Grey }
+            new() { Model = "M1", RiskLevel = RiskLevel.Low },
+            new() { Model = "M2", RiskLevel = RiskLevel.Critical },
+            new() { Model = "M3", RiskLevel = RiskLevel.Moderate }
         ];
 
         var aggregated = _strategy.Aggregate(results);
 
-        Assert.Equal(RiskLevel.Grey, aggregated.OverallRiskLevel);
+        Assert.Equal(RiskLevel.Moderate, aggregated.OverallRiskLevel);
     }
 
     /// <summary>
-    ///     Verifies that the strategy defaults to <see cref="RiskLevel.Grey" /> when the input collection is empty.
+    ///     Verifies that the strategy defaults to <see cref="RiskLevel.Moderate" /> when the input collection is empty.
     /// </summary>
     [Fact]
     public void Aggregate_ReturnsGrey_WhenResultsAreEmpty()
@@ -88,6 +88,6 @@ public class MajorityVoteAggregationTests
 
         var aggregated = _strategy.Aggregate(results);
 
-        Assert.Equal(RiskLevel.Grey, aggregated.OverallRiskLevel);
+        Assert.Equal(RiskLevel.Moderate, aggregated.OverallRiskLevel);
     }
 }

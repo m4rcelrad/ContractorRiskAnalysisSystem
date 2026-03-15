@@ -10,7 +10,7 @@ namespace CRAS.Domain.Services;
 /// </summary>
 /// <remarks>
 ///     This model calculates a weighted payment delay score based on the contractor's invoice history.
-///     It evaluates invoices that are either paid or past due and calculates a risk level (Safe, Grey, or Distress)
+///     It evaluates invoices that are either paid or past due and calculates a risk level (Low, Moderate, or Critical)
 ///     using the weighted average delay across the relevant invoices. The model uses an exchange rate service
 ///     to normalize invoice amounts to a base currency for accurate weight calculation.
 /// </remarks>
@@ -30,7 +30,7 @@ public class PaymentDelayModel(IExchangeRateService exchangeRateService) : IBeha
             {
                 Model = "Weighted Payment Delay",
                 Score = 0m,
-                RiskLevel = RiskLevel.Grey
+                RiskLevel = RiskLevel.Moderate
             };
         }
 
@@ -44,7 +44,7 @@ public class PaymentDelayModel(IExchangeRateService exchangeRateService) : IBeha
             {
                 Model = "Weighted Payment Delay",
                 Score = 0m,
-                RiskLevel = RiskLevel.Grey
+                RiskLevel = RiskLevel.Moderate
             };
         }
 
@@ -76,9 +76,9 @@ public class PaymentDelayModel(IExchangeRateService exchangeRateService) : IBeha
 
         var riskLevel = averageDelay switch
         {
-            < 5 => RiskLevel.Safe,
-            < 14 => RiskLevel.Grey,
-            _ => RiskLevel.Distress
+            < 5 => RiskLevel.Low,
+            < 14 => RiskLevel.Moderate,
+            _ => RiskLevel.Critical
         };
 
         return new RiskResult
