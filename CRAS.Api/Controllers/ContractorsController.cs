@@ -201,4 +201,49 @@ public class ContractorsController(
 
         return Created($"/api/contractors/{id}/statements/{statement.Id}", statement);
     }
+
+    /// <summary>
+    ///     Retrieves an overview of all contractors, including their risk assessments
+    ///     and latest financial statements.
+    /// </summary>
+    /// <returns>A list containing dashboard overviews for all contractors.</returns>
+    [HttpGet("dashboard")]
+    public async Task<IActionResult> GetDashboard()
+    {
+        var contractors = await context.Contractors
+            .Include(c => c.FinancialStatements)
+            .Include(c => c.Invoices)
+            .ToListAsync();
+
+        var overviews = new List<DashboardOverviewResponse>();
+
+        foreach (var contractor in contractors)
+        {
+            var latestStatement = contractor.FinancialStatements
+                .OrderByDescending(s => s.Year)
+                .FirstOrDefault();
+
+            if (latestStatement == null)
+            {
+                continue;
+            }
+
+            var result = await riskEngine.AssessAsync(contractor, latestStatement);
+
+            overviews.Add(new DashboardOverviewResponse
+            {
+                ContractorId = contractor.Id,
+                TaxId = contractor.TaxId,
+                Assessment = new RiskAssessmentResponse
+                {
+                    ContractorId = contractor.Id,
+                    ContractorName = $"Contractor {contractor.TaxId}",
+                    OverallRisk = result.OverallRiskLevel,
+                    Breakdown = result.IndividualResults.ToList()
+                }
+            });
+        }
+
+        return Ok(overviews);
+    }
 }

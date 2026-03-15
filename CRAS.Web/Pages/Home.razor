@@ -1,9 +1,7 @@
 ﻿@page "/"
-@using System.Net
 @using System.Text.Json
 @using System.Text.Json.Serialization
 @using CRAS.Application.Models
-@using CRAS.Domain.Entities
 @using CRAS.Domain.Enums
 @inject HttpClient Http
 
@@ -96,7 +94,7 @@
                             <div class="d-flex justify-content-between align-items-start mb-3">
                                 <div>
                                     <span class="text-muted small text-uppercase fw-bold">Tax ID</span>
-                                    <h5 class="fw-bold mb-0">@item.Contractor.TaxId</h5>
+                                    <h5 class="fw-bold mb-0">@item.TaxId</h5>
                                 </div>
                                 <span
                                     class="badge bg-@GetStatusColor(item.Assessment.OverallRisk) rounded-pill px-3 py-2">
@@ -122,10 +120,10 @@
                             </div>
 
                             <div class="mt-auto">
-                                <button
-                                    class="btn btn-outline-@GetStatusColor(item.Assessment.OverallRisk) w-100 rounded-pill fw-semibold">
+                                <a href="/contractors/@item.ContractorId"
+                                   class="btn btn-outline-@GetStatusColor(item.Assessment.OverallRisk) w-100 rounded-pill fw-semibold">
                                     View Full Report
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -136,7 +134,7 @@
 </div>
 
 @code {
-    private List<ContractorData>? _contractorOverviews;
+    private List<DashboardOverviewResponse>? _contractorOverviews;
     private string? _errorMessage;
 
     protected override async Task OnInitializedAsync()
@@ -161,34 +159,7 @@
                 Converters = { new JsonStringEnumConverter() }
             };
 
-            var contractors = await Http.GetFromJsonAsync<List<Contractor>>("api/Contractors", options);
-
-            if (contractors != null)
-            {
-                var overviews = new List<ContractorData>();
-
-                foreach (var contractor in contractors)
-                {
-                    try
-                    {
-                        var assessment = await Http.GetFromJsonAsync<RiskAssessmentResponse>($"api/Contractors/{contractor.Id}/assess", options);
-
-                        if (assessment != null)
-                        {
-                            overviews.Add(new ContractorData
-                            {
-                                Contractor = contractor,
-                                Assessment = assessment
-                            });
-                        }
-                    }
-                    catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound || ex.StatusCode == HttpStatusCode.BadRequest)
-                    {
-                    }
-                }
-
-                _contractorOverviews = overviews;
-            }
+            _contractorOverviews = await Http.GetFromJsonAsync<List<DashboardOverviewResponse>>("api/Contractors/dashboard", options);
         }
         catch (Exception ex)
         {
@@ -216,12 +187,6 @@
             RiskLevel.Distress => "✕",
             _ => "•"
         };
-    }
-
-    private class ContractorData
-    {
-        public Contractor Contractor { get; init; } = null!;
-        public RiskAssessmentResponse Assessment { get; init; } = null!;
     }
 
 }
