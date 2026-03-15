@@ -5,23 +5,16 @@ using CRAS.Application.Models;
 
 namespace CRAS.Web.Services;
 
-public class DashboardStateService
+public class DashboardStateService(HttpClient http)
 {
-    private readonly HttpClient _http;
-    private readonly JsonSerializerOptions _options;
+    private readonly JsonSerializerOptions _options = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        Converters = { new JsonStringEnumConverter() }
+    };
 
     public List<DashboardOverviewResponse>? Overviews { get; private set; }
-    public DateTime LastFetch { get; private set; }
-
-    public DashboardStateService(HttpClient http)
-    {
-        _http = http;
-        _options = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true,
-            Converters = { new JsonStringEnumConverter() }
-        };
-    }
+    private DateTime LastFetch { get; set; }
 
     public async Task LoadDataAsync(bool forceRefresh = false)
     {
@@ -30,7 +23,7 @@ public class DashboardStateService
             return;
         }
 
-        Overviews = await _http.GetFromJsonAsync<List<DashboardOverviewResponse>>("api/Contractors/dashboard", _options);
+        Overviews = await http.GetFromJsonAsync<List<DashboardOverviewResponse>>("api/Contractors/dashboard", _options);
         LastFetch = DateTime.UtcNow;
     }
 }

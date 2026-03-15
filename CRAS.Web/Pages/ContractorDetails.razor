@@ -33,6 +33,14 @@
         }
     </div>
 
+    @if (!string.IsNullOrEmpty(_errorMessage))
+    {
+        <div class="alert alert-danger rounded-3 shadow-sm border-0 border-start border-danger border-5 mb-4">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <strong>System Error:</strong> @_errorMessage
+        </div>
+    }
+
     @if (_isLoading)
     {
         <div class="d-flex justify-content-center my-5">

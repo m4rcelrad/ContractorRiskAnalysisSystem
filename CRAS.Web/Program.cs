@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 namespace CRAS.Web;
 
-public class Program
+public static class Program
 {
     public async static Task Main(string[] args)
     {
@@ -14,7 +14,7 @@ public class Program
         builder.RootComponents.Add<App>("#app");
         builder.RootComponents.Add<HeadOutlet>("head::after");
 
-        builder.Services.AddScoped(sp => new HttpClient
+        builder.Services.AddScoped(_ => new HttpClient
         {
             BaseAddress = new Uri("http://localhost:5250/")
         });
