@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using CRAS.Web.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -17,6 +18,8 @@ public class Program
         {
             BaseAddress = new Uri("http://localhost:5250/")
         });
+
+        builder.Services.AddScoped<DashboardStateService>();
 
         builder.Services.Configure<JsonSerializerOptions>(options =>
         {
