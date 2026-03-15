@@ -6,8 +6,17 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 namespace CRAS.Web;
 
+/// <summary>
+///     The main entry point for the CRAS WebAssembly application.
+/// </summary>
 public static class Program
 {
+    /// <summary>
+    ///     Configures and builds the WebAssembly host, registers dependency injection services,
+    ///     and starts the application.
+    /// </summary>
+    /// <param name="args">Command-line arguments passed to the application.</param>
+    /// <returns>A task that represents the asynchronous run operation.</returns>
     public async static Task Main(string[] args)
     {
         var builder = WebAssemblyHostBuilder.CreateDefault(args);
