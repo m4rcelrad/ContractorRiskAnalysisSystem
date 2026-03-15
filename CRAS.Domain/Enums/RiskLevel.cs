@@ -8,15 +8,15 @@ public enum RiskLevel
     /// <summary>
     ///     Indicates a low probability of financial distress or bankruptcy. The contractor is considered financially healthy.
     /// </summary>
-    Safe,
+    Low,
 
     /// <summary>
     ///     Indicates an uncertain financial situation. The contractor requires further monitoring or manual analysis.
     /// </summary>
-    Grey,
+    Moderate,
 
     /// <summary>
     ///     Indicates a high probability of bankruptcy or severe financial problems. Represents a high risk for cooperation.
     /// </summary>
-    Distress
+    Critical
 }

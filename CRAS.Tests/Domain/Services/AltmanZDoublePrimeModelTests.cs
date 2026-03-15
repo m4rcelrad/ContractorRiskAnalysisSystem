@@ -55,7 +55,7 @@ public class AltmanZDoublePrimeModelTests
         var result = _model.CalculateRisk(statement);
 
         Assert.Equal("Altman Z''-Score", result.Model);
-        Assert.Equal(RiskLevel.Distress, result.RiskLevel);
+        Assert.Equal(RiskLevel.Critical, result.RiskLevel);
         Assert.True(result.Score < 1.10m);
     }
 
@@ -75,7 +75,7 @@ public class AltmanZDoublePrimeModelTests
 
         var result = _model.CalculateRisk(statement);
 
-        Assert.Equal(RiskLevel.Safe, result.RiskLevel);
+        Assert.Equal(RiskLevel.Low, result.RiskLevel);
         Assert.True(result.Score > 2.60m);
     }
 

@@ -40,9 +40,9 @@ public class AltmanZScoreModel : IRiskModel
 
         var riskLevel = score switch
         {
-            > 2.99m => RiskLevel.Safe,
-            >= 1.81m and <= 2.99m => RiskLevel.Grey,
-            _ => RiskLevel.Distress
+            > 2.99m => RiskLevel.Low,
+            >= 1.81m and <= 2.99m => RiskLevel.Moderate,
+            _ => RiskLevel.Critical
         };
 
         return new RiskResult

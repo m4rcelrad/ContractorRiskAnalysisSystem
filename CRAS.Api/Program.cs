@@ -23,6 +23,7 @@ public static class Program
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         });
+
         builder.Services.AddEndpointsApiExplorer();
 
         builder.Services.AddSwaggerGen(c =>
@@ -62,7 +63,6 @@ public static class Program
         });
 
         builder.Services.AddOutputCache();
-        builder.Services.AddEndpointsApiExplorer();
 
         var app = builder.Build();
 
@@ -79,7 +79,7 @@ public static class Program
         }
 
         app.UseCors();
-
+        app.UseOutputCache();
         app.UseAuthorization();
         app.MapControllers();
 

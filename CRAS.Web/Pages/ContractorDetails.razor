@@ -269,9 +269,9 @@
     {
         return level switch
         {
-            RiskLevel.Safe => "success",
-            RiskLevel.Grey => "warning",
-            RiskLevel.Distress => "danger",
+            RiskLevel.Low => "success",
+            RiskLevel.Moderate => "warning",
+            RiskLevel.Critical => "danger",
             _ => "secondary"
         };
     }

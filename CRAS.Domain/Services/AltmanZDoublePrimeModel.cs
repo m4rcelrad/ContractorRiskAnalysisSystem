@@ -39,9 +39,9 @@ public class AltmanZDoublePrimeModel : IRiskModel
 
         var riskLevel = score switch
         {
-            > 2.60m => RiskLevel.Safe,
-            >= 1.1m and <= 2.60m => RiskLevel.Grey,
-            _ => RiskLevel.Distress
+            > 2.60m => RiskLevel.Low,
+            >= 1.1m and <= 2.60m => RiskLevel.Moderate,
+            _ => RiskLevel.Critical
         };
 
         return new RiskResult

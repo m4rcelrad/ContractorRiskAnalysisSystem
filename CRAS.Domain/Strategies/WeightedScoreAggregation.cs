@@ -31,7 +31,7 @@ public class WeightedScoreAggregation(IReadOnlyDictionary<string, decimal> model
 
     private RiskLevel DetermineOverallRisk(IReadOnlyCollection<RiskResult> results)
     {
-        if (results.Count == 0) return RiskLevel.Grey;
+        if (results.Count == 0) return RiskLevel.Moderate;
 
         var totalWeight = 0m;
         var weightedScoreSum = 0m;
@@ -42,9 +42,9 @@ public class WeightedScoreAggregation(IReadOnlyDictionary<string, decimal> model
 
             var levelScore = result.RiskLevel switch
             {
-                RiskLevel.Safe => 1m,
-                RiskLevel.Grey => 2m,
-                RiskLevel.Distress => 3m,
+                RiskLevel.Low => 1m,
+                RiskLevel.Moderate => 2m,
+                RiskLevel.Critical => 3m,
                 _ => 2m
             };
 
@@ -52,15 +52,15 @@ public class WeightedScoreAggregation(IReadOnlyDictionary<string, decimal> model
             totalWeight += weight;
         }
 
-        if (totalWeight == 0m) return RiskLevel.Grey;
+        if (totalWeight == 0m) return RiskLevel.Moderate;
 
         var finalScore = weightedScoreSum / totalWeight;
 
         return finalScore switch
         {
-            < 1.5m => RiskLevel.Safe,
-            >= 1.5m and < 2.5m => RiskLevel.Grey,
-            _ => RiskLevel.Distress
+            < 1.5m => RiskLevel.Low,
+            >= 1.5m and < 2.5m => RiskLevel.Moderate,
+            _ => RiskLevel.Critical
         };
     }
 }
