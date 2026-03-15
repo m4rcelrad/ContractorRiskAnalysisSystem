@@ -33,21 +33,20 @@
         }
     </div>
 
-    @if (!string.IsNullOrEmpty(_errorMessage))
+    @if (_state == PageState.Error)
     {
         <div class="alert alert-danger rounded-3 shadow-sm border-0 border-start border-danger border-5 mb-4">
             <i class="bi bi-exclamation-triangle-fill me-2"></i>
             <strong>System Error:</strong> @_errorMessage
         </div>
     }
-
-    @if (_isLoading)
+    else if (_state == PageState.Loading)
     {
         <div class="d-flex justify-content-center my-5">
             <div class="spinner-border text-primary" role="status"></div>
         </div>
     }
-    else if (_contractor != null && _assessment != null)
+    else if (_state == PageState.Ready && _contractor != null && _assessment != null)
     {
         var latestStatement = _contractor.FinancialStatements.OrderByDescending(s => s.Year).FirstOrDefault();
 
@@ -151,13 +150,13 @@
                             {
                                 <tr>
                                     <td class="fw-bold">@statement.Year</td>
-                                    <td>@statement.TotalAssets.ToString("C0")</td>
-                                    <td>@statement.TotalLiabilities.ToString("C0")</td>
-                                    <td>@statement.WorkingCapital.ToString("C0")</td>
-                                    <td>@statement.EBIT.ToString("C0")</td>
-                                    <td>@statement.Sales.ToString("C0")</td>
+                                    <td>@statement.TotalAssets.ToString("N0")</td>
+                                    <td>@statement.TotalLiabilities.ToString("N0")</td>
+                                    <td>@statement.WorkingCapital.ToString("N0")</td>
+                                    <td>@statement.EBIT.ToString("N0")</td>
+                                    <td>@statement.Sales.ToString("N0")</td>
                                     <td class="fw-semibold text-@(statement.NetIncome >= 0 ? "success" : "danger")">
-                                        @statement.NetIncome.ToString("C0")
+                                        @statement.NetIncome.ToString("N0")
                                     </td>
                                 </tr>
                             }
@@ -170,12 +169,19 @@
 </div>
 
 @code {
+    private enum PageState
+    {
+        Loading,
+        Ready,
+        Error
+    }
+
     [Parameter]
     public Guid Id { get; set; }
 
+    private PageState _state = PageState.Loading;
     private Contractor? _contractor;
     private RiskAssessmentResponse? _assessment;
-    private bool _isLoading = true;
     private string? _errorMessage;
 
     protected override async Task OnInitializedAsync()
@@ -194,17 +200,16 @@
             {
                 _assessment = await Http.GetFromJsonAsync<RiskAssessmentResponse>($"api/Contractors/{Id}/assess", options);
             }
-            catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound || ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            catch (HttpRequestException ex) when (ex.StatusCode is System.Net.HttpStatusCode.NotFound or System.Net.HttpStatusCode.BadRequest)
             {
             }
+
+            _state = PageState.Ready;
         }
         catch (Exception ex)
         {
             _errorMessage = ex.Message;
-        }
-        finally
-        {
-            _isLoading = false;
+            _state = PageState.Error;
         }
     }
 
