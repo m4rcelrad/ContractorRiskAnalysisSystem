@@ -30,9 +30,13 @@
 
 .model-list-item {
     font-size: 0.85rem;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .model-list-item:last-child {
     border-bottom: none;
+}
+
+#blazor-error-ui {
+    display: none;
 }
