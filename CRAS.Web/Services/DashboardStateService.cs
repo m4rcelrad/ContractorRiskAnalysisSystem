@@ -23,7 +23,20 @@ public class DashboardStateService(HttpClient http)
             return;
         }
 
-        Overviews = await http.GetFromJsonAsync<List<DashboardOverviewResponse>>("api/Contractors/dashboard", _options);
-        LastFetch = DateTime.UtcNow;
+        const int maxRetries = 3;
+
+        for (var i = 0; i < maxRetries; i++)
+        {
+            try
+            {
+                Overviews = await http.GetFromJsonAsync<List<DashboardOverviewResponse>>("api/Contractors/dashboard", _options);
+                LastFetch = DateTime.UtcNow;
+                return;
+            }
+            catch (HttpRequestException) when (i < maxRetries - 1)
+            {
+                await Task.Delay(1000);
+            }
+        }
     }
 }

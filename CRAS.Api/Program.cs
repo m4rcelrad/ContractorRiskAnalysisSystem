@@ -12,6 +12,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CRAS.Api;
 
+/// <summary>
+/// The entry point for the application.
+/// </summary>
+/// <remarks>
+/// This class configures services, middleware, and other settings required
+/// for the application at startup. It includes dependency injection setup,
+/// database initialization, CORS policy definition, and API documentation
+/// configurations. This class is automatically executed when the application
+/// starts.
+/// </remarks>
 public static class Program
 {
     public static void Main(string[] args)

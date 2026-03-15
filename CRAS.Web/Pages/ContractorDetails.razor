@@ -157,7 +157,7 @@
                                 <div class="p-3 bg-light rounded-3">
                                     <span class="text-muted small text-uppercase fw-bold">Unpaid Invoices</span>
                                     <div class="d-flex align-items-baseline gap-2">
-                                        <h3 class ="mb-0 text-@(unpaidInvoices.Any() ? "danger" : "success")">@unpaidInvoices.Count</h3>
+                                        <h3 class="mb-0 text-@(unpaidInvoices.Any() ? "danger" : "success")">@unpaidInvoices.Count</h3>
                                         <span class="text-muted fw-semibold">
                                             (@CalculateRatio(unpaidInvoices.Count, _contractor.Invoices.Count).ToString("P1"))
                                         </span>

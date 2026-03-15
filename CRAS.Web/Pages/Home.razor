@@ -11,9 +11,18 @@
             <h2 class="fw-bold mb-0">Risk Intelligence Dashboard</h2>
             <span class="text-muted small">Real-time contractor financial assessment</span>
         </div>
-        <button class="btn btn-dark px-4 rounded-pill shadow-sm" @onclick="RefreshData">
-            <i class="bi bi-arrow-clockwise me-2"></i> Refresh Analysis
-        </button>
+        <div class="d-flex gap-2">
+            <select class="form-select rounded-pill shadow-sm" style="width: auto; cursor: pointer;"
+                    @onchange="@(OnFilterChanged)">
+                <option value="">All Risk Levels</option>
+                <option value="@RiskLevel.Low">Low Risk</option>
+                <option value="@RiskLevel.Moderate">Moderate Risk</option>
+                <option value="@RiskLevel.Critical">Critical Risk</option>
+            </select>
+            <button class="btn btn-dark px-4 rounded-pill shadow-sm" @onclick="RefreshData">
+                <i class="bi bi-arrow-clockwise me-2"></i> Refresh Analysis
+            </button>
+        </div>
     </div>
 
     @switch (_state)
@@ -89,7 +98,22 @@
 
                 <h5 class="fw-bold mb-3">Individual Contractor Reports</h5>
                 <div class="row g-4">
-                    @foreach (var item in DashboardState.Overviews.OrderByDescending(c => c.Assessment.OverallRisk))
+                    @{
+                        var filteredList = _selectedRiskFilter == null
+                            ? DashboardState.Overviews
+                            : DashboardState.Overviews.Where(c => c.Assessment.OverallRisk == _selectedRiskFilter).ToList();
+                    }
+
+                    @if (!filteredList.Any())
+                    {
+                        <div class="col-12">
+                            <div class="text-center text-muted p-4 bg-light rounded-3">
+                                No contractors match the selected risk level.
+                            </div>
+                        </div>
+                    }
+
+                    @foreach (var item in filteredList.OrderByDescending(c => c.Assessment.OverallRisk))
                     {
                         <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6">
                             <div
@@ -161,6 +185,7 @@
 
     private PageState _state = PageState.Loading;
     private string? _errorMessage;
+    private RiskLevel? _selectedRiskFilter;
 
     protected override async Task OnInitializedAsync()
     {
@@ -198,6 +223,18 @@
         {
             _errorMessage = "Unexpected system error.";
             _state = PageState.Error;
+        }
+    }
+
+    private void OnFilterChanged(ChangeEventArgs e)
+    {
+        if (Enum.TryParse<RiskLevel>(e.Value?.ToString(), out var parsedRisk))
+        {
+            _selectedRiskFilter = parsedRisk;
+        }
+        else
+        {
+            _selectedRiskFilter = null;
         }
     }
 
