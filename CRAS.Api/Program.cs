@@ -9,6 +9,7 @@ using CRAS.Infrastructure.Data;
 using CRAS.Infrastructure.Services;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF.Infrastructure;
 
 namespace CRAS.Api;
 
@@ -73,6 +74,9 @@ public static class Program
         });
 
         builder.Services.AddOutputCache();
+
+        QuestPDF.Settings.License = LicenseType.Community;
+        builder.Services.AddScoped<ReportGenerator>();
 
         var app = builder.Build();
 

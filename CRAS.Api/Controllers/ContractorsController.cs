@@ -3,6 +3,7 @@ using CRAS.Application.Requests;
 using CRAS.Domain.Engine;
 using CRAS.Domain.Entities;
 using CRAS.Infrastructure.Data;
+using CRAS.Infrastructure.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
@@ -266,5 +267,28 @@ public class ContractorsController(
         if (contractor == null) return NotFound();
 
         return Ok(contractor);
+    }
+
+    [HttpGet("{id:guid}/report")]
+    public async Task<IActionResult> DownloadReport(Guid id, [FromServices] ReportGenerator generator)
+    {
+        var contractor = await context.Contractors
+            .Include(c => c.FinancialStatements)
+            .Include(c => c.Invoices)
+            .FirstOrDefaultAsync(c => c.Id == id);
+
+        if (contractor == null) return NotFound();
+
+        var latestStatement = contractor.FinancialStatements
+            .OrderByDescending(s => s.Year)
+            .FirstOrDefault();
+
+        if (latestStatement == null) return BadRequest();
+
+        var result = await riskEngine.AssessAsync(contractor, latestStatement);
+
+        var pdfBytes = generator.Generate(contractor, result);
+
+        return File(pdfBytes, "application/pdf", $"Report_{contractor.TaxId}.pdf");
     }
 }

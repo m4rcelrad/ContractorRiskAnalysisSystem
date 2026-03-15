@@ -25,11 +25,17 @@
         </div>
         @if (_assessment != null)
         {
-            <div class="text-end">
-                <span class="text-muted small d-block text-uppercase fw-bold">Overall Status</span>
-                <span class="badge bg-@GetStatusColor(_assessment.OverallRisk) fs-5 px-4 py-2 rounded-pill shadow-sm">
-                    @_assessment.OverallRisk
-                </span>
+            <div class="text-end d-flex align-items-center gap-3">
+                <a href="@($"http://localhost:5250/api/contractors/{Id}/report")" target="_blank" class="btn btn-outline-primary rounded-pill px-4 py-2 shadow-sm">
+                    <i class="bi bi-file-earmark-pdf-fill me-2"></i> Download Report
+                </a>
+
+                <div>
+                    <span class="text-muted small d-block text-uppercase fw-bold">Overall Status</span>
+                    <span class="badge bg-@GetStatusColor(_assessment.OverallRisk) fs-5 px-4 py-2 rounded-pill shadow-sm">
+                        @_assessment.OverallRisk
+                    </span>
+                </div>
             </div>
         }
     </div>
