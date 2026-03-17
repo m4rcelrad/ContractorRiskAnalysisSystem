@@ -269,7 +269,14 @@ public class ContractorsController(
         return Ok(contractor);
     }
 
+    /// <summary>
+    /// Downloads a detailed PDF report for a specific contractor, including financial evaluations and risk assessments.
+    /// </summary>
+    /// <param name="id">The unique identifier (GUID) of the contractor whose report is to be generated.</param>
+    /// <param name="generator">The report generator service responsible for creating the PDF file.</param>
+    /// <returns>A PDF file containing the contractor's report, or an appropriate HTTP response if the contractor or data is missing.</returns>
     [HttpGet("{id:guid}/report")]
+    [OutputCache(Duration = 300)]
     public async Task<IActionResult> DownloadReport(Guid id, [FromServices] ReportGenerator generator)
     {
         var contractor = await context.Contractors
