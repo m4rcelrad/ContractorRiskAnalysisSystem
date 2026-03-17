@@ -1,5 +1,6 @@
 ﻿using CRAS.Domain.Entities;
 using CRAS.Domain.Enums;
+using CRAS.Domain.Interfaces;
 using CRAS.Domain.Models;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
@@ -7,7 +8,7 @@ using QuestPDF.Infrastructure;
 
 namespace CRAS.Infrastructure.Services;
 
-public class ReportGenerator
+public class ReportGenerator : IReportGenerator
 {
     public byte[] Generate(Contractor contractor, AggregatedRiskResult assessment)
     {

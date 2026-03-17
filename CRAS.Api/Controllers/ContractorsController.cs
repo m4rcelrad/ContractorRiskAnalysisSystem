@@ -2,8 +2,8 @@
 using CRAS.Application.Requests;
 using CRAS.Domain.Engine;
 using CRAS.Domain.Entities;
+using CRAS.Domain.Interfaces;
 using CRAS.Infrastructure.Data;
-using CRAS.Infrastructure.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
@@ -274,10 +274,10 @@ public class ContractorsController(
     /// </summary>
     /// <param name="id">The unique identifier (GUID) of the contractor whose report is to be generated.</param>
     /// <param name="generator">The report generator service responsible for creating the PDF file.</param>
-    /// <returns>A PDF file containing the contractor's report, or an appropriate HTTP response if the contractor or data is missing.</returns>
+    /// <returns>A PDF file containing the contractor's report or an appropriate HTTP response if the contractor or data is missing.</returns>
     [HttpGet("{id:guid}/report")]
     [OutputCache(Duration = 300)]
-    public async Task<IActionResult> DownloadReport(Guid id, [FromServices] ReportGenerator generator)
+    public async Task<IActionResult> DownloadReport(Guid id, [FromServices] IReportGenerator generator)
     {
         var contractor = await context.Contractors
             .Include(c => c.FinancialStatements)

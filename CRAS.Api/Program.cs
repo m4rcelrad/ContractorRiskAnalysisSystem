@@ -76,7 +76,7 @@ public static class Program
         builder.Services.AddOutputCache();
 
         QuestPDF.Settings.License = LicenseType.Community;
-        builder.Services.AddScoped<ReportGenerator>();
+        builder.Services.AddScoped<IReportGenerator, ReportGenerator>();
 
         var app = builder.Build();
 
