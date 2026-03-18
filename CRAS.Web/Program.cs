@@ -1,5 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using CRAS.Domain.Interfaces;
+using CRAS.Domain.Services;
 using CRAS.Web.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -29,6 +31,9 @@ public static class Program
         });
 
         builder.Services.AddScoped<DashboardStateService>();
+
+        builder.Services.AddScoped<IRatioCalculator, RatioCalculator>();
+        builder.Services.AddScoped<IPaymentAnalyzer, PaymentAnalyzer>();
 
         builder.Services.Configure<JsonSerializerOptions>(options =>
         {
