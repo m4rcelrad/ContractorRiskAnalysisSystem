@@ -5,7 +5,11 @@
 @using CRAS.Application.Models
 @using CRAS.Domain.Entities
 @using CRAS.Domain.Enums
+@using CRAS.Domain.Interfaces
+@using CRAS.Domain.Models
 @inject HttpClient Http
+@inject IRatioCalculator RatioCalculator
+@inject IPaymentAnalyzer PaymentAnalyzer
 
 <PageTitle>Contractor Report</PageTitle>
 
@@ -25,11 +29,19 @@
         </div>
         @if (_assessment != null)
         {
-            <div class="text-end">
-                <span class="text-muted small d-block text-uppercase fw-bold">Overall Status</span>
-                <span class="badge bg-@GetStatusColor(_assessment.OverallRisk) fs-5 px-4 py-2 rounded-pill shadow-sm">
-                    @_assessment.OverallRisk
-                </span>
+            <div class="text-end d-flex align-items-center gap-3">
+                <a href="@($"http://localhost:5250/api/contractors/{Id}/report")" target="_blank"
+                   class="btn btn-outline-primary rounded-pill px-4 py-2 shadow-sm">
+                    <i class="bi bi-file-earmark-pdf-fill me-2"></i> Download Report
+                </a>
+
+                <div>
+                    <span class="text-muted small d-block text-uppercase fw-bold">Overall Status</span>
+                    <span
+                        class="badge bg-@GetStatusColor(_assessment.OverallRisk) fs-5 px-4 py-2 rounded-pill shadow-sm">
+                        @_assessment.OverallRisk
+                    </span>
+                </div>
             </div>
         }
     </div>
@@ -77,7 +89,7 @@
                     </div>
                 </div>
 
-                @if (latestStatement != null)
+                @if (latestStatement != null && _ratios != null)
                 {
                     <div class="col-lg-8">
                         <div class="card shadow-sm border-0 h-100">
@@ -90,38 +102,38 @@
                                     <div class="col-md-4">
                                         <div class="p-3 bg-light rounded-3">
                                             <span class="text-muted small text-uppercase fw-bold">Current Ratio</span>
-                                            <h3 class="mb-0 text-dark">@CalculateRatio(latestStatement.CurrentAssets, latestStatement.CurrentLiabilities).ToString("F2")</h3>
+                                            <h3 class="mb-0 text-dark">@_ratios.CurrentRatio.ToString("F2")</h3>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="p-3 bg-light rounded-3">
                                             <span class="text-muted small text-uppercase fw-bold">Debt Ratio</span>
-                                            <h3 class="mb-0 text-dark">@CalculateRatio(latestStatement.TotalLiabilities, latestStatement.TotalAssets).ToString("P1")</h3>
+                                            <h3 class="mb-0 text-dark">@_ratios.DebtRatio.ToString("P1")</h3>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="p-3 bg-light rounded-3">
                                             <span
                                                 class="text-muted small text-uppercase fw-bold">Return on Equity</span>
-                                            <h3 class="mb-0 text-dark">@CalculateRatio(latestStatement.NetIncome, latestStatement.BookValueEquity).ToString("P1")</h3>
+                                            <h3 class="mb-0 text-dark">@_ratios.ReturnOnEquity.ToString("P1")</h3>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="p-3 bg-light rounded-3">
                                             <span class="text-muted small text-uppercase fw-bold">Working Capital / Assets</span>
-                                            <h3 class="mb-0 text-dark">@CalculateRatio(latestStatement.WorkingCapital, latestStatement.TotalAssets).ToString("P1")</h3>
+                                            <h3 class="mb-0 text-dark">@_ratios.WorkingCapitalToAssets.ToString("P1")</h3>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="p-3 bg-light rounded-3">
                                             <span class="text-muted small text-uppercase fw-bold">Asset Turnover</span>
-                                            <h3 class="mb-0 text-dark">@CalculateRatio(latestStatement.Sales, latestStatement.TotalAssets).ToString("F2")</h3>
+                                            <h3 class="mb-0 text-dark">@_ratios.AssetTurnover.ToString("F2")</h3>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="p-3 bg-light rounded-3">
                                             <span class="text-muted small text-uppercase fw-bold">EBIT Margin</span>
-                                            <h3 class="mb-0 text-dark">@CalculateRatio(latestStatement.EBIT, latestStatement.Sales).ToString("P1")</h3>
+                                            <h3 class="mb-0 text-dark">@_ratios.EbitMargin.ToString("P1")</h3>
                                         </div>
                                     </div>
                                 </div>
@@ -131,14 +143,8 @@
                 }
             </div>
 
-            @if (_contractor.Invoices.Any())
+            @if (_contractor.Invoices.Any() && _paymentMetrics != null)
             {
-                var unpaidInvoices = _contractor.Invoices.Where(i => !i.IsPaid).ToList();
-                var paidInvoices = _contractor.Invoices.Where(i => i.IsPaid).ToList();
-                var totalUnpaidAmount = unpaidInvoices.Sum(i => i.Amount);
-
-                var avgDelay = paidInvoices.Any() ? paidInvoices.Average(i => (i.PaymentDate!.Value.Date - i.DueDate.Date).TotalDays) : 0;
-
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-header bg-white border-0 pt-4 pb-0">
                         <h6 class="fw-bold text-uppercase text-muted mb-0">Payment Behavior</h6>
@@ -148,8 +154,8 @@
                             <div class="col-md-4">
                                 <div class="p-3 bg-light rounded-3">
                                     <span class="text-muted small text-uppercase fw-bold">Average Delay</span>
-                                    <h3 class="mb-0 text-@(avgDelay > 14 ? "danger" : avgDelay > 0 ? "warning" : "success")">
-                                        @Math.Max(0, Math.Round(avgDelay, 1)) days
+                                    <h3 class="mb-0 text-@(_paymentMetrics.AverageDelayDays > 14 ? "danger" : _paymentMetrics.AverageDelayDays > 0 ? "warning" : "success")">
+                                        @Math.Max(0, Math.Round(_paymentMetrics.AverageDelayDays, 1)) days
                                     </h3>
                                 </div>
                             </div>
@@ -157,9 +163,9 @@
                                 <div class="p-3 bg-light rounded-3">
                                     <span class="text-muted small text-uppercase fw-bold">Unpaid Invoices</span>
                                     <div class="d-flex align-items-baseline gap-2">
-                                        <h3 class="mb-0 text-@(unpaidInvoices.Any() ? "danger" : "success")">@unpaidInvoices.Count</h3>
+                                        <h3 class="mb-0 text-@(_paymentMetrics.UnpaidCount > 0 ? "danger" : "success")">@_paymentMetrics.UnpaidCount</h3>
                                         <span class="text-muted fw-semibold">
-                                            (@CalculateRatio(unpaidInvoices.Count, _contractor.Invoices.Count).ToString("P1"))
+                                            (@_paymentMetrics.UnpaidRatio.ToString("P1"))
                                         </span>
                                     </div>
                                 </div>
@@ -167,7 +173,7 @@
                             <div class="col-md-4">
                                 <div class="p-3 bg-light rounded-3">
                                     <span class="text-muted small text-uppercase fw-bold">Unpaid Amount</span>
-                                    <h3 class="mb-0 text-@(totalUnpaidAmount > 0 ? "danger" : "success")">@totalUnpaidAmount.ToString("N0")</h3>
+                                    <h3 class="mb-0 text-@(_paymentMetrics.TotalUnpaidAmount > 0 ? "danger" : "success")">@_paymentMetrics.TotalUnpaidAmount.ToString("N0")</h3>
                                 </div>
                             </div>
                         </div>
@@ -235,6 +241,8 @@
     private Contractor? _contractor;
     private RiskAssessmentResponse? _assessment;
     private string? _errorMessage;
+    private KeyFinancialRatios? _ratios;
+    private PaymentBehaviorMetrics? _paymentMetrics;
 
     protected override async Task OnInitializedAsync()
     {
@@ -247,6 +255,17 @@
             };
 
             _contractor = await Http.GetFromJsonAsync<Contractor>($"api/Contractors/{Id}", options);
+
+            if (_contractor != null)
+            {
+                var latestStatement = _contractor.FinancialStatements.OrderByDescending(s => s.Year).FirstOrDefault();
+                if (latestStatement != null)
+                {
+                    _ratios = RatioCalculator.CalculateFor(latestStatement);
+                }
+
+                _paymentMetrics = PaymentAnalyzer.Analyze(_contractor.Invoices.ToList());
+            }
 
             try
             {
@@ -274,12 +293,6 @@
             RiskLevel.Critical => "danger",
             _ => "secondary"
         };
-    }
-
-    private static decimal CalculateRatio(decimal numerator, decimal denominator)
-    {
-        if (denominator == 0) return 0m;
-        return numerator / denominator;
     }
 
 }
