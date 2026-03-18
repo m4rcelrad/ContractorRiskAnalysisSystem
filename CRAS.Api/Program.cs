@@ -6,6 +6,10 @@ using CRAS.Domain.Interfaces;
 using CRAS.Domain.Services;
 using CRAS.Domain.Strategies;
 using CRAS.Infrastructure.Data;
+using CRAS.Infrastructure.Reporting;
+using CRAS.Infrastructure.Reporting.Core;
+using CRAS.Infrastructure.Reporting.Helpers;
+using CRAS.Infrastructure.Reporting.Sections;
 using CRAS.Infrastructure.Services;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -13,16 +17,6 @@ using QuestPDF.Infrastructure;
 
 namespace CRAS.Api;
 
-/// <summary>
-/// The entry point for the application.
-/// </summary>
-/// <remarks>
-/// This class configures services, middleware, and other settings required
-/// for the application at startup. It includes dependency injection setup,
-/// database initialization, CORS policy definition, and API documentation
-/// configurations. This class is automatically executed when the application
-/// starts.
-/// </remarks>
 public static class Program
 {
     public static void Main(string[] args)
@@ -76,7 +70,15 @@ public static class Program
         builder.Services.AddOutputCache();
 
         QuestPDF.Settings.License = LicenseType.Community;
+
         builder.Services.AddScoped<IReportGenerator, ReportGenerator>();
+        builder.Services.AddSingleton<IStyleProvider, StyleProvider>();
+
+        builder.Services.AddScoped<IReportSection, HeaderSection>();
+        builder.Services.AddScoped<IReportSection, RiskAssessmentSection>();
+        builder.Services.AddScoped<IReportSection, FinancialRatiosSection>();
+        builder.Services.AddScoped<IReportSection, PaymentBehaviorSection>();
+        builder.Services.AddScoped<IReportSection, FinancialHistorySection>();
 
         builder.Services.AddScoped<IRatioCalculator, RatioCalculator>();
         builder.Services.AddScoped<IPaymentAnalyzer, PaymentAnalyzer>();
