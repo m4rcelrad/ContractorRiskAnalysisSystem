@@ -78,6 +78,9 @@ public static class Program
         QuestPDF.Settings.License = LicenseType.Community;
         builder.Services.AddScoped<IReportGenerator, ReportGenerator>();
 
+        builder.Services.AddScoped<IRatioCalculator, RatioCalculator>();
+        builder.Services.AddScoped<IPaymentAnalyzer, PaymentAnalyzer>();
+
         var app = builder.Build();
 
         if (app.Environment.IsDevelopment())
