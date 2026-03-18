@@ -3,6 +3,9 @@ using QuestPDF.Infrastructure;
 
 namespace CRAS.Infrastructure.Reporting.Helpers;
 
+/// <summary>
+///     Extension methods for building tables in reports.
+/// </summary>
 internal static class TableBuilderExtensions
 {
     extension(IContainer container)

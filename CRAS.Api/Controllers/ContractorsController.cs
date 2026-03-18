@@ -251,10 +251,14 @@ public class ContractorsController(
     }
 
     /// <summary>
-    /// Retrieves details of a specific contractor by their unique identifier, including associated financial statements and invoices.
+    ///     Retrieves details of a specific contractor by their unique identifier, including associated financial statements
+    ///     and invoices.
     /// </summary>
     /// <param name="id">The unique identifier of the contractor.</param>
-    /// <returns>An HTTP response containing the contractor's details if found, or a "Not Found" status if the contractor does not exist.</returns>
+    /// <returns>
+    ///     An HTTP response containing the contractor's details if found, or a "Not Found" status if the contractor does
+    ///     not exist.
+    /// </returns>
     [HttpGet("{id:guid}")]
     [OutputCache(Duration = 60)]
     public async Task<IActionResult> GetContractor(Guid id)
@@ -270,11 +274,14 @@ public class ContractorsController(
     }
 
     /// <summary>
-    /// Downloads a detailed PDF report for a specific contractor, including financial evaluations and risk assessments.
+    ///     Downloads a detailed PDF report for a specific contractor, including financial evaluations and risk assessments.
     /// </summary>
     /// <param name="id">The unique identifier (GUID) of the contractor whose report is to be generated.</param>
     /// <param name="generator">The report generator service responsible for creating the PDF file.</param>
-    /// <returns>A PDF file containing the contractor's report or an appropriate HTTP response if the contractor or data is missing.</returns>
+    /// <returns>
+    ///     A PDF file containing the contractor's report or an appropriate HTTP response if the contractor or data is
+    ///     missing.
+    /// </returns>
     [HttpGet("{id:guid}/report")]
     [OutputCache(Duration = 300)]
     public async Task<IActionResult> DownloadReport(Guid id, [FromServices] IReportGenerator generator)

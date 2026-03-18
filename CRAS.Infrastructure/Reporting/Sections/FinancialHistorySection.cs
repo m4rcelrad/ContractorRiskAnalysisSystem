@@ -5,8 +5,21 @@ using QuestPDF.Fluent;
 
 namespace CRAS.Infrastructure.Reporting.Sections;
 
+/// <summary>
+///     Represents a report section that displays the historical financial statements of a contractor.
+/// </summary>
+/// <remarks>
+///     This section generates a chronological table detailing key financial metrics
+///     (such as Assets, Liabilities, EBIT, and Net Income) across multiple fiscal years.
+///     If no financial history is available, it outputs a default placeholder message.
+/// </remarks>
 public class FinancialHistorySection : IReportSection
 {
+    /// <summary>
+    ///     Composes the visual layout for the financial history section within the PDF document.
+    /// </summary>
+    /// <param name="column">The column descriptor used to arrange elements vertically.</param>
+    /// <param name="context">The context containing contractor data, risk assessments, and styling definitions.</param>
     public void Compose(ColumnDescriptor column, ReportContext context)
     {
         column.Item().Text("Financial Statement History").Style(context.Style.SubHeaderStyle);

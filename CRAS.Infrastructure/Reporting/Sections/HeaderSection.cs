@@ -4,10 +4,20 @@ using QuestPDF.Fluent;
 namespace CRAS.Infrastructure.Reporting.Sections;
 
 /// <summary>
-/// Represents the header section of the financial report.
+///     Represents the header section of the financial report.
 /// </summary>
+/// <remarks>
+///     This section generates the top portion of the document, displaying the report title,
+///     the contractor's Tax ID, and a highlighted overall risk status. It concludes with a
+///     subtle horizontal separator line.
+/// </remarks>
 public class HeaderSection : IReportSection
 {
+    /// <summary>
+    ///     Composes the visual layout for the header section within the PDF document.
+    /// </summary>
+    /// <param name="columnDescriptor">The column descriptor used to arrange elements vertically.</param>
+    /// <param name="context">The context containing contractor data, risk assessments, and styling definitions.</param>
     public void Compose(ColumnDescriptor columnDescriptor, ReportContext context)
     {
         columnDescriptor.Item().Row(row =>

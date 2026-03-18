@@ -5,8 +5,22 @@ using QuestPDF.Fluent;
 
 namespace CRAS.Infrastructure.Reporting.Sections;
 
+/// <summary>
+///     Represents a report section that analyzes and displays the contractor's payment behavior.
+/// </summary>
+/// <remarks>
+///     This section provides insights into the contractor's reliability by presenting metrics such as
+///     average payment delays, the count and ratio of unpaid invoices, and the total outstanding debt.
+///     It uses the <see cref="IPaymentAnalyzer" /> domain service to process raw invoice data.
+/// </remarks>
+/// <param name="paymentAnalyzer">The domain service used to calculate payment metrics from invoice history.</param>
 public class PaymentBehaviorSection(IPaymentAnalyzer paymentAnalyzer) : IReportSection
 {
+    /// <summary>
+    ///     Composes the visual layout for the payment behavior section within the PDF document.
+    /// </summary>
+    /// <param name="column">The column descriptor used to arrange elements vertically.</param>
+    /// <param name="context">The context containing contractor data, risk assessments, and styling definitions.</param>
     public void Compose(ColumnDescriptor column, ReportContext context)
     {
         column.Item().Text("Payment Behavior").Style(context.Style.SubHeaderStyle);

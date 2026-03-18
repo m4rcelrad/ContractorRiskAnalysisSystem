@@ -5,8 +5,14 @@ using QuestPDF.Infrastructure;
 
 namespace CRAS.Infrastructure.Reporting.Helpers;
 
+/// <summary>
+///     Provides a centralized mechanism for defining and managing reusable styles for text, colors, and other formatting
+///     elements used in generating reports within the CRAS application.
+/// </summary>
 public class StyleProvider : IStyleProvider
 {
+    private readonly string _primarycolor = Colors.Blue.Darken3;
+
     public string GetRiskColor(RiskLevel level)
     {
         return level switch
@@ -18,7 +24,6 @@ public class StyleProvider : IStyleProvider
         };
     }
 
-    public string PrimaryColor => Colors.Blue.Darken3;
     public string BorderColor => Colors.Grey.Lighten2;
     public string TextMutedColor => Colors.Grey.Medium;
 
@@ -30,7 +35,7 @@ public class StyleProvider : IStyleProvider
     public TextStyle HeaderStyle => BaseStyle
         .FontSize(24)
         .SemiBold()
-        .FontColor(PrimaryColor);
+        .FontColor(_primarycolor);
 
     public TextStyle SubHeaderStyle => BaseStyle
         .FontSize(14)

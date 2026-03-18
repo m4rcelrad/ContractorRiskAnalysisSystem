@@ -9,8 +9,19 @@ using QuestPDF.Infrastructure;
 
 namespace CRAS.Infrastructure.Reporting;
 
+/// <summary>
+///     Orchestrates the generation of PDF reports by composing various report sections into a single document.
+/// </summary>
+/// <param name="sections">The collection of report sections to be rendered.</param>
+/// <param name="styleProvider">The provider for document-wide styling and themes.</param>
 public class ReportGenerator(IEnumerable<IReportSection> sections, IStyleProvider styleProvider) : IReportGenerator
 {
+    /// <summary>
+    ///     Generates a PDF document for a specific contractor based on the provided risk assessment results.
+    /// </summary>
+    /// <param name="contractor">The contractor entity data to include in the report.</param>
+    /// <param name="assessment">The aggregated risk results used to populate assessment sections.</param>
+    /// <returns>A byte array representing the generated PDF report.</returns>
     public byte[] Generate(Contractor contractor, AggregatedRiskResult assessment)
     {
         var context = new ReportContext
