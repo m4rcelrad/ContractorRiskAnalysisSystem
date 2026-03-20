@@ -18,12 +18,17 @@
     </ItemGroup>
 
     <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
         <Using Include="Xunit"/>
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\CRAS.Domain\CRAS.Domain.csproj"/>
         <ProjectReference Include="..\CRAS.Infrastructure\CRAS.Infrastructure.csproj"/>
+        <ProjectReference Include="..\CRAS.Api\CRAS.Api.csproj"/>
     </ItemGroup>
 
 </Project>
