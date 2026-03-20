@@ -1,5 +1,7 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
+using CRAS.Api.Filters;
+using CRAS.Application.Requests;
 using CRAS.Application.Validators;
 using CRAS.Domain.Interfaces;
 using CRAS.Domain.RiskModels;
@@ -24,7 +26,7 @@ public static class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddControllers().AddJsonOptions(options =>
+        builder.Services.AddControllers(options => { options.Filters.Add<ValidationFilter>(); }).AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -53,7 +55,9 @@ public static class Program
 
         builder.Services.AddHttpClient<IExchangeRateService, NbpExchangeRateService>();
 
-        builder.Services.AddValidatorsFromAssemblyContaining<AddInvoiceRequestValidator>();
+        builder.Services.AddScoped<IValidator<AddContractorRequest>, AddContractRequestValidator>();
+        builder.Services.AddScoped<IValidator<AddInvoiceRequest>, AddInvoiceRequestValidator>();
+        builder.Services.AddScoped<IValidator<AddFinancialStatementRequest>, AddFinancialStatementRequestValidator>();
 
         builder.Services.AddCors(options =>
         {
