@@ -7,13 +7,13 @@ using Moq;
 namespace CRAS.Tests.Domain.Services;
 
 /// <summary>
-/// Unit tests for the <see cref="RiskEngine"/> class.
+///     Unit tests for the <see cref="RiskEngine" /> class.
 /// </summary>
 public class RiskEngineTests
 {
     /// <summary>
-    /// Verifies that <see cref="RiskEngine.AssessAsync"/> correctly invokes all registered
-    /// models and aggregates their results into a final assessment.
+    ///     Verifies that <see cref="RiskEngine.AssessAsync" /> correctly invokes all registered
+    ///     models and aggregates their results into a final assessment.
     /// </summary>
     [Fact]
     public async Task AssessAsync_OrchestratesAllModelsAndAggregates_ReturnsResult()

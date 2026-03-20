@@ -3,16 +3,16 @@
 namespace CRAS.Tests.Domain.Entities;
 
 /// <summary>
-/// Unit tests for the <see cref="FinancialStatement"/> class.
+///     Unit tests for the <see cref="FinancialStatement" /> class.
 /// </summary>
 /// <remarks>
-/// This class verifies the initialization and property assignment of financial statement entities,
-/// ensuring that default values and required data points are correctly handled [cite: 138-140].
+///     This class verifies the initialization and property assignment of financial statement entities,
+///     ensuring that default values and required data points are correctly handled [cite: 138-140].
 /// </remarks>
 public class FinancialStatementTests
 {
     /// <summary>
-    /// Verifies that a new <see cref="FinancialStatement"/> instance generates a unique identifier by default.
+    ///     Verifies that a new <see cref="FinancialStatement" /> instance generates a unique identifier by default.
     /// </summary>
     [Fact]
     public void Constructor_ShouldInitializeId()
@@ -41,7 +41,7 @@ public class FinancialStatementTests
     }
 
     /// <summary>
-    /// Verifies that properties are correctly assigned and stored during initialization.
+    ///     Verifies that properties are correctly assigned and stored during initialization.
     /// </summary>
     [Fact]
     public void Properties_ShouldBeCorrectlyAssigned()

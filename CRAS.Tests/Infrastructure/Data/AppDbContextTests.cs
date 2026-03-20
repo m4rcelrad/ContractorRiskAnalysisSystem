@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore;
 namespace CRAS.Tests.Infrastructure;
 
 /// <summary>
-/// Unit tests for <see cref="AppDbContext"/> focusing on Entity Framework
-/// configurations and data persistence[cite: 2].
+///     Unit tests for <see cref="AppDbContext" /> focusing on Entity Framework
+///     configurations and data persistence[cite: 2].
 /// </summary>
 public class AppDbContextTests
 {
     /// <summary>
-    /// Verifies that the global DateTime converter correctly forces UTC kind
-    /// when saving entities to the database[cite: 6, 7].
+    ///     Verifies that the global DateTime converter correctly forces UTC kind
+    ///     when saving entities to the database[cite: 6, 7].
     /// </summary>
     [Fact]
     public async Task SaveChanges_ShouldForceUtcDateTimeKind()

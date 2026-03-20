@@ -6,13 +6,13 @@ using Moq.Protected;
 namespace CRAS.Tests.Infrastructure.Services;
 
 /// <summary>
-/// Unit tests for the <see cref="NbpExchangeRateService"/> verify API interaction and fallback logic.
+///     Unit tests for the <see cref="NbpExchangeRateService" /> verify API interaction and fallback logic.
 /// </summary>
 public class NbpExchangeRateServiceTests
 {
     /// <summary>
-    /// Ensures that the service returns a fixed rate of 1.0 for the local currency (PLN)
-    /// without making any external API calls[cite: 247].
+    ///     Ensures that the service returns a fixed rate of 1.0 for the local currency (PLN)
+    ///     without making any external API calls[cite: 247].
     /// </summary>
     [Fact]
     public async Task GetExchangeRateAsync_ReturnsOne_ForPln()
@@ -32,8 +32,8 @@ public class NbpExchangeRateServiceTests
     }
 
     /// <summary>
-    /// Verifies that the service handles API failures (e.g., 404 Not Found) by returning
-    /// a safe default exchange rate of 1.0[cite: 249, 251].
+    ///     Verifies that the service handles API failures (e.g., 404 Not Found) by returning
+    ///     a safe default exchange rate of 1.0[cite: 249, 251].
     /// </summary>
     [Fact]
     public async Task GetExchangeRateAsync_ReturnsOne_OnApiError()

@@ -4,15 +4,15 @@ using CRAS.Domain.Services;
 namespace CRAS.Tests.Domain.Services;
 
 /// <summary>
-/// Unit tests for the <see cref="RatioCalculator"/> service.
+///     Unit tests for the <see cref="RatioCalculator" /> service.
 /// </summary>
 public class RatioCalculatorTests
 {
     private readonly RatioCalculator _calculator = new();
 
     /// <summary>
-    /// Verifies that <see cref="RatioCalculator.CalculateFor"/> returns correct
-    /// ratios based on valid financial statement data.
+    ///     Verifies that <see cref="RatioCalculator.CalculateFor" /> returns correct
+    ///     ratios based on valid financial statement data.
     /// </summary>
     [Fact]
     public void CalculateFor_WithValidData_ReturnsExpectedRatios()
@@ -46,8 +46,8 @@ public class RatioCalculatorTests
     }
 
     /// <summary>
-    /// Verifies that the calculator handles zero denominators gracefully by
-    /// returning zero instead of throwing exceptions.
+    ///     Verifies that the calculator handles zero denominators gracefully by
+    ///     returning zero instead of throwing exceptions.
     /// </summary>
     [Fact]
     public void CalculateFor_WithZeroDenominators_ReturnsZeroRatios()

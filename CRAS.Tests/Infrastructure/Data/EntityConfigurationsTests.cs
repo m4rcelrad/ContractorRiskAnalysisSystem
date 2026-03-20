@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 namespace CRAS.Tests.Infrastructure;
 
 /// <summary>
-/// Unit tests verifying the Entity Framework Core model configurations, ensuring
-/// database constraints and relationships are correctly applied.
+///     Unit tests verifying the Entity Framework Core model configurations, ensuring
+///     database constraints and relationships are correctly applied.
 /// </summary>
 public class EntityConfigurationsTests
 {
@@ -24,8 +24,8 @@ public class EntityConfigurationsTests
     }
 
     /// <summary>
-    /// Verifies that the <see cref="Contractor"/> entity has the correct database
-    /// limitations, specifically the maximum length and requirement of the TaxId property.
+    ///     Verifies that the <see cref="Contractor" /> entity has the correct database
+    ///     limitations, specifically the maximum length and requirement of the TaxId property.
     /// </summary>
     [Fact]
     public void ContractorConfiguration_ShouldApplyCorrectConstraints()
@@ -40,8 +40,8 @@ public class EntityConfigurationsTests
     }
 
     /// <summary>
-    /// Verifies that the <see cref="FinancialStatement"/> entity applies correct PostgreSQL
-    /// numeric types to precision-sensitive financial data to prevent rounding errors.
+    ///     Verifies that the <see cref="FinancialStatement" /> entity applies correct PostgreSQL
+    ///     numeric types to precision-sensitive financial data to prevent rounding errors.
     /// </summary>
     [Fact]
     public void FinancialStatementConfiguration_ShouldApplyCorrectNumericTypes()
@@ -59,8 +59,8 @@ public class EntityConfigurationsTests
     }
 
     /// <summary>
-    /// Verifies that the <see cref="Invoice"/> entity configurations are applied,
-    /// including ignoring dynamically calculated properties and limiting currency code length.
+    ///     Verifies that the <see cref="Invoice" /> entity configurations are applied,
+    ///     including ignoring dynamically calculated properties and limiting currency code length.
     /// </summary>
     [Fact]
     public void InvoiceConfiguration_ShouldApplyCorrectConstraintsAndIgnoreProperties()
@@ -81,8 +81,8 @@ public class EntityConfigurationsTests
     }
 
     /// <summary>
-    /// Verifies that the delete behaviors between entities are configured correctly,
-    /// ensuring cascade deletion from Contractors to related tables.
+    ///     Verifies that the delete behaviors between entities are configured correctly,
+    ///     ensuring cascade deletion from Contractors to related tables.
     /// </summary>
     [Fact]
     public void Relationships_ShouldHaveCascadeDeleteBehavior()

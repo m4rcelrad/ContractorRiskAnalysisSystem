@@ -4,25 +4,26 @@ using CRAS.Infrastructure.Reporting;
 using CRAS.Infrastructure.Reporting.Core;
 using CRAS.Infrastructure.Reporting.Helpers;
 using Moq;
+using QuestPDF;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 
 namespace CRAS.Tests.Infrastructure.Reporting;
 
 /// <summary>
-/// Unit tests for the <see cref="ReportGenerator"/> class to ensure the PDF generation
-/// process orchestrates sections correctly and produces a valid document.
+///     Unit tests for the <see cref="ReportGenerator" /> class to ensure the PDF generation
+///     process orchestrates sections correctly and produces a valid document.
 /// </summary>
 public class ReportGeneratorTests
 {
     public ReportGeneratorTests()
     {
-        QuestPDF.Settings.License = LicenseType.Community;
+        Settings.License = LicenseType.Community;
     }
 
     /// <summary>
-    /// Verifies that the generator successfully produces a non-empty byte array
-    /// representing the PDF document when provided with valid data.
+    ///     Verifies that the generator successfully produces a non-empty byte array
+    ///     representing the PDF document when provided with valid data.
     /// </summary>
     [Fact]
     public void Generate_ShouldReturnNonEmptyByteArray_WhenGivenValidData()
@@ -33,10 +34,7 @@ public class ReportGeneratorTests
 
         var mockSection = new Mock<IReportSection>();
         mockSection.Setup(s => s.Compose(It.IsAny<ColumnDescriptor>(), It.IsAny<ReportContext>()))
-            .Callback<ColumnDescriptor, ReportContext>((col, _) =>
-            {
-                col.Item().Text("Test Output");
-            });
+            .Callback<ColumnDescriptor, ReportContext>((col, _) => { col.Item().Text("Test Output"); });
 
         var generator = new ReportGenerator([ mockSection.Object ], styleProvider);
 
@@ -47,8 +45,8 @@ public class ReportGeneratorTests
     }
 
     /// <summary>
-    /// Verifies that the generator iterates through all injected sections and invokes
-    /// their Compose method to build the complete document.
+    ///     Verifies that the generator iterates through all injected sections and invokes
+    ///     their Compose method to build the complete document.
     /// </summary>
     [Fact]
     public void Generate_ShouldInvokeComposeOnAllProvidedSections()

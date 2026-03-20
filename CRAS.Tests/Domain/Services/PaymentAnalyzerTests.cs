@@ -4,15 +4,15 @@ using CRAS.Domain.Services;
 namespace CRAS.Tests.Domain.Services;
 
 /// <summary>
-/// Unit tests for the <see cref="PaymentAnalyzer"/> service.
+///     Unit tests for the <see cref="PaymentAnalyzer" /> service.
 /// </summary>
 public class PaymentAnalyzerTests
 {
     private readonly PaymentAnalyzer _analyzer = new();
 
     /// <summary>
-    /// Verifies that <see cref="PaymentAnalyzer.Analyze"/> returns zeroed metrics
-    /// when provided with an empty collection of invoices.
+    ///     Verifies that <see cref="PaymentAnalyzer.Analyze" /> returns zeroed metrics
+    ///     when provided with an empty collection of invoices.
     /// </summary>
     [Fact]
     public void Analyze_WithEmptyCollection_ReturnsZeroMetrics()
@@ -26,8 +26,8 @@ public class PaymentAnalyzerTests
     }
 
     /// <summary>
-    /// Verifies that <see cref="PaymentAnalyzer.Analyze"/> correctly calculates
-    /// totals, average delays, and unpaid ratios for a mixed set of invoices.
+    ///     Verifies that <see cref="PaymentAnalyzer.Analyze" /> correctly calculates
+    ///     totals, average delays, and unpaid ratios for a mixed set of invoices.
     /// </summary>
     [Fact]
     public void Analyze_WithMixedInvoices_CalculatesCorrectMetrics()

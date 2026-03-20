@@ -3,17 +3,17 @@
 namespace CRAS.Tests.Domain.Entities;
 
 /// <summary>
-/// Unit tests for the <see cref="Contractor"/> class.
+///     Unit tests for the <see cref="Contractor" /> class.
 /// </summary>
 /// <remarks>
-/// This class contains tests to validate the behavior of the Contractor's Tax ID (NIP) validation logic,
-/// ensuring the correctness of the checksum algorithm and proper handling of valid and invalid inputs.
+///     This class contains tests to validate the behavior of the Contractor's Tax ID (NIP) validation logic,
+///     ensuring the correctness of the checksum algorithm and proper handling of valid and invalid inputs.
 /// </remarks>
 public class ContractorTests
 {
     /// <summary>
-    /// Verifies that <see cref="Contractor.IsValidTaxId"/> returns true for numerically correct
-    /// Polish Tax Identification Numbers (NIP).
+    ///     Verifies that <see cref="Contractor.IsValidTaxId" /> returns true for numerically correct
+    ///     Polish Tax Identification Numbers (NIP).
     /// </summary>
     /// <param name="taxId">A valid 10-digit NIP string to be tested.</param>
     [Theory]
@@ -26,8 +26,8 @@ public class ContractorTests
     }
 
     /// <summary>
-    /// Verifies that <see cref="Contractor.IsValidTaxId"/> returns false for inputs that fail
-    /// format, length, or checksum requirements.
+    ///     Verifies that <see cref="Contractor.IsValidTaxId" /> returns false for inputs that fail
+    ///     format, length, or checksum requirements.
     /// </summary>
     /// <param name="taxId">An invalid NIP string (e.g., wrong length, containing letters, or incorrect checksum).</param>
     [Theory]

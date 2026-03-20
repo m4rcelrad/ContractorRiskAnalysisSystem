@@ -5,15 +5,15 @@ using QuestPDF.Helpers;
 namespace CRAS.Tests.Infrastructure.Reporting.Helpers;
 
 /// <summary>
-/// Unit tests for the <see cref="StyleProvider"/> class, ensuring that report styles
-/// and colors are correctly defined and consistent with branding [cite: 171-172].
+///     Unit tests for the <see cref="StyleProvider" /> class, ensuring that report styles
+///     and colors are correctly defined and consistent with branding [cite: 171-172].
 /// </summary>
 public class StyleProviderTests
 {
     private readonly StyleProvider _provider = new();
 
     /// <summary>
-    /// Provides strongly typed color mapping data for risk levels .
+    ///     Provides strongly typed color mapping data for risk levels .
     /// </summary>
     public static TheoryData<RiskLevel, string> RiskColorData =>
         new()
@@ -24,8 +24,8 @@ public class StyleProviderTests
         };
 
     /// <summary>
-    /// Verifies that <see cref="StyleProvider.GetRiskColor"/> returns the correct
-    /// hexadecimal color codes for each risk level.
+    ///     Verifies that <see cref="StyleProvider.GetRiskColor" /> returns the correct
+    ///     hexadecimal color codes for each risk level.
     /// </summary>
     /// <param name="level">The risk level to evaluate[cite: 173].</param>
     /// <param name="expectedColor">The expected QuestPDF color constant[cite: 174].</param>
@@ -38,8 +38,8 @@ public class StyleProviderTests
     }
 
     /// <summary>
-    /// Verifies that <see cref="StyleProvider.BaseStyle"/> is correctly initialized
-    /// with the default font family and size[cite: 175].
+    ///     Verifies that <see cref="StyleProvider.BaseStyle" /> is correctly initialized
+    ///     with the default font family and size[cite: 175].
     /// </summary>
     [Fact]
     public void BaseStyle_ShouldBeInitialized()
@@ -49,8 +49,8 @@ public class StyleProviderTests
     }
 
     /// <summary>
-    /// Ensures that <see cref="StyleProvider.HeaderStyle"/> is correctly generated
-    /// using the primary branding color[cite: 176].
+    ///     Ensures that <see cref="StyleProvider.HeaderStyle" /> is correctly generated
+    ///     using the primary branding color[cite: 176].
     /// </summary>
     [Fact]
     public void HeaderStyle_ShouldBeInitialized()
@@ -60,8 +60,8 @@ public class StyleProviderTests
     }
 
     /// <summary>
-    /// Verifies that <see cref="StyleProvider.SubHeaderStyle"/> is correctly
-    /// generated for secondary headings[cite: 177].
+    ///     Verifies that <see cref="StyleProvider.SubHeaderStyle" /> is correctly
+    ///     generated for secondary headings[cite: 177].
     /// </summary>
     [Fact]
     public void SubHeaderStyle_ShouldBeInitialized()
@@ -71,8 +71,8 @@ public class StyleProviderTests
     }
 
     /// <summary>
-    /// Verifies that <see cref="StyleProvider.MutedTextStyle"/> is correctly
-    /// generated for secondary information[cite: 180].
+    ///     Verifies that <see cref="StyleProvider.MutedTextStyle" /> is correctly
+    ///     generated for secondary information[cite: 180].
     /// </summary>
     [Fact]
     public void MutedTextStyle_ShouldBeInitialized()
