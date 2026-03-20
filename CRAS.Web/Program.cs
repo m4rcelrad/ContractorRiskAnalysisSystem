@@ -25,9 +25,11 @@ public static class Program
         builder.RootComponents.Add<App>("#app");
         builder.RootComponents.Add<HeadOutlet>("head::after");
 
+        var apiSettings = builder.Configuration.GetSection("ApiSettings");
+
         builder.Services.AddScoped(_ => new HttpClient
         {
-            BaseAddress = new Uri("http://localhost:5250/")
+            BaseAddress = new Uri(apiSettings["BaseAddress"] ?? "http://localhost:5250/")
         });
 
         builder.Services.AddScoped<DashboardStateService>();

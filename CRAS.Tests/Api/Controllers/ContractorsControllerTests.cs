@@ -10,20 +10,21 @@ using Moq;
 namespace CRAS.Tests.Api.Controllers;
 
 /// <summary>
-/// Unit tests for the <see cref="ContractorsController"/> class, verifying its functionality and ensuring correct behavior
-/// under various conditions.
+///     Unit tests for the <see cref="ContractorsController" /> class, verifying its functionality and ensuring correct
+///     behavior
+///     under various conditions.
 /// </summary>
 /// <remarks>
-/// This test class leverages an in-memory database context for isolating and simulating database operations.
-/// Mocking is used to replace external dependencies such as the <see cref="IRiskEngine"/> service.
+///     This test class leverages an in-memory database context for isolating and simulating database operations.
+///     Mocking is used to replace external dependencies such as the <see cref="IRiskEngine" /> service.
 /// </remarks>
 public class ContractorsControllerTests
 {
     /// <summary>
-    /// Creates and returns a new instance of the application database context configured
-    /// with a unique in-memory database provider.
+    ///     Creates and returns a new instance of the application database context configured
+    ///     with a unique in-memory database provider.
     /// </summary>
-    /// <returns>A fresh instance of <see cref="AppDbContext"/>.</returns>
+    /// <returns>A fresh instance of <see cref="AppDbContext" />.</returns>
     private static AppDbContext CreateInMemoryDbContext()
     {
         var options = new DbContextOptionsBuilder<AppDbContext>()
@@ -34,8 +35,8 @@ public class ContractorsControllerTests
     }
 
     /// <summary>
-    /// Verifies that the <see cref="ContractorsController.GetContractor"/> method returns
-    /// a <see cref="NotFoundResult"/> when the specified contractor ID does not exist in the database.
+    ///     Verifies that the <see cref="ContractorsController.GetContractor" /> method returns
+    ///     a <see cref="NotFoundResult" /> when the specified contractor ID does not exist in the database.
     /// </summary>
     [Fact]
     public async Task GetContractor_WhenContractorDoesNotExist_ReturnsNotFound()
@@ -50,8 +51,8 @@ public class ContractorsControllerTests
     }
 
     /// <summary>
-    /// Verifies that the <see cref="ContractorsController.GetContractor"/> method returns
-    /// an <see cref="OkObjectResult"/> containing the correct contractor data when a matching ID is found.
+    ///     Verifies that the <see cref="ContractorsController.GetContractor" /> method returns
+    ///     an <see cref="OkObjectResult" /> containing the correct contractor data when a matching ID is found.
     /// </summary>
     [Fact]
     public async Task GetContractor_WhenContractorExists_ReturnsOkWithData()
@@ -72,8 +73,8 @@ public class ContractorsControllerTests
     }
 
     /// <summary>
-    /// Verifies that the <see cref="ContractorsController.AddContractor"/> method successfully
-    /// creates a new contractor record and returns a <see cref="CreatedResult"/>.
+    ///     Verifies that the <see cref="ContractorsController.AddContractor" /> method successfully
+    ///     creates a new contractor record and returns a <see cref="CreatedResult" />.
     /// </summary>
     [Fact]
     public async Task AddContractor_CreatesContractor_AndReturnsCreatedResult()

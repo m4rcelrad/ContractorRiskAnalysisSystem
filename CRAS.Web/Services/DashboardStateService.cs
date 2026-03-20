@@ -10,7 +10,7 @@ namespace CRAS.Web.Services;
 ///     Provides in-memory caching and resilient data fetching from the API.
 /// </summary>
 /// <param name="http">The HTTP client used to communicate with the backend API.</param>
-public class DashboardStateService(HttpClient http)
+public class DashboardStateService(HttpClient http, IConfiguration configuration)
 {
     /// <summary>
     ///     JSON serialization options configured to handle enums as strings and be case-insensitive.
@@ -45,13 +45,15 @@ public class DashboardStateService(HttpClient http)
             return;
         }
 
+        var endpoint = configuration["ApiSettings:DashboardEndpoint"] ?? "api/Contractors/dashboard";
+
         const int maxRetries = 3;
 
         for (var i = 0; i < maxRetries; i++)
         {
             try
             {
-                Overviews = await http.GetFromJsonAsync<List<DashboardOverviewResponse>>("api/Contractors/dashboard", _options);
+                Overviews = await http.GetFromJsonAsync<List<DashboardOverviewResponse>>(endpoint, _options);
                 LastFetch = DateTime.UtcNow;
                 return;
             }
