@@ -1,4 +1,4 @@
-﻿namespace CRAS.Domain.Models;
+﻿namespace CRAS.Domain.ValueObjects;
 
 /// <summary>
 ///     Represent a record of payment behavior metrics.

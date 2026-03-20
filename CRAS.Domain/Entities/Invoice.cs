@@ -19,12 +19,12 @@ public class Invoice
     /// <summary>
     ///     Gets or sets the identifier of the contractor associated with this invoice.
     /// </summary>
-    public required Guid ContractorId { get; set; }
+    public required Guid ContractorId { get; init; }
 
     /// <summary>
     ///     Gets or sets the total gross amount of the invoice.
     /// </summary>
-    public required decimal Amount { get; set; }
+    public required decimal Amount { get; init; }
 
     /// <summary>
     ///     Gets or sets the three-letter ISO currency code.
@@ -34,7 +34,7 @@ public class Invoice
     /// <summary>
     ///     Gets or sets the date when the invoice was issued.
     /// </summary>
-    public required DateTime IssueDate { get; set; }
+    public required DateTime IssueDate { get; init; }
 
     /// <summary>
     ///     Gets or sets the formal deadline for payment.
@@ -56,7 +56,7 @@ public class Invoice
     ///     Gets the navigation property to the associated contractor.
     /// </summary>
     [JsonIgnore]
-    public Contractor Contractor { get; set; } = null!;
+    public Contractor Contractor { get; init; } = null!;
 
     /// <summary>
     ///     Calculates the number of days the payment is (or was) delayed beyond the due date.

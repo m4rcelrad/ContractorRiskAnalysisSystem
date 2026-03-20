@@ -1,26 +1,26 @@
 ﻿using CRAS.Domain.Entities;
 using CRAS.Domain.Enums;
 using CRAS.Domain.Interfaces;
-using CRAS.Domain.Models;
+using CRAS.Domain.ValueObjects;
 
-namespace CRAS.Domain.Services;
+namespace CRAS.Domain.RiskModels;
 
 /// <summary>
-///     Implements the Altman Z''-Score (Double Prime) financial risk model.
+///     Implements the original Altman Z-Score financial risk model.
 /// </summary>
 /// <remarks>
-///     This variant is designed specifically for private, non-manufacturing companies,
-///     as well as for companies operating in emerging markets.
+///     This model is designed primarily to predict the probability of bankruptcy
+///     for public manufacturing companies based on five specific financial ratios.
 /// </remarks>
-public class AltmanZDoublePrimeModel : IRiskModel
+public class AltmanZScoreModel : IRiskModel
 {
     /// <summary>
     ///     Gets the formal name of the risk model.
     /// </summary>
-    public string ModelName => "Altman Z''-Score";
+    public string ModelName => "Altman Z-Score";
 
     /// <summary>
-    ///     Calculates the Altman Z''-Score and determines the corresponding risk level.
+    ///     Calculates the Altman Z-Score and determines the corresponding risk level.
     /// </summary>
     /// <param name="statement">The financial statement containing the necessary data points.</param>
     /// <returns>A <see cref="RiskResult" /> containing the calculated score and risk level.</returns>
@@ -33,14 +33,15 @@ public class AltmanZDoublePrimeModel : IRiskModel
         var x1 = statement.WorkingCapital / statement.TotalAssets;
         var x2 = statement.RetainedEarnings / statement.TotalAssets;
         var x3 = statement.EBIT / statement.TotalAssets;
-        var x4 = statement.BookValueEquity / statement.TotalLiabilities;
+        var x4 = statement.MarketValueEquity / statement.TotalLiabilities;
+        var x5 = statement.Sales / statement.TotalAssets;
 
-        var score = 6.56m * x1 + 3.26m * x2 + 6.72m * x3 + 1.05m * x4;
+        var score = 1.2m * x1 + 1.4m * x2 + 3.3m * x3 + 0.6m * x4 + 1.0m * x5;
 
         var riskLevel = score switch
         {
-            > 2.60m => RiskLevel.Low,
-            >= 1.1m and <= 2.60m => RiskLevel.Moderate,
+            > 2.99m => RiskLevel.Low,
+            >= 1.81m and <= 2.99m => RiskLevel.Moderate,
             _ => RiskLevel.Critical
         };
 

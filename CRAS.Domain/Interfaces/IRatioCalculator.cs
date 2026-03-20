@@ -1,5 +1,5 @@
 ﻿using CRAS.Domain.Entities;
-using CRAS.Domain.Models;
+using CRAS.Domain.ValueObjects;
 
 namespace CRAS.Domain.Interfaces;
 

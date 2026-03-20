@@ -1,8 +1,8 @@
 ﻿using CRAS.Domain.Entities;
 using CRAS.Domain.Interfaces;
-using CRAS.Domain.Models;
+using CRAS.Domain.ValueObjects;
 
-namespace CRAS.Domain.Engine;
+namespace CRAS.Domain.Services;
 
 /// <summary>
 ///     Defines the core engine responsible for orchestrating the risk assessment process.

@@ -1,6 +1,6 @@
 ﻿using CRAS.Domain.Entities;
 using CRAS.Domain.Interfaces;
-using CRAS.Domain.Models;
+using CRAS.Domain.ValueObjects;
 using CRAS.Infrastructure.Reporting.Core;
 using CRAS.Infrastructure.Reporting.Helpers;
 using QuestPDF.Fluent;

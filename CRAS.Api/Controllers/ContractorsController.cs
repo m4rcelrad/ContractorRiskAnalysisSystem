@@ -1,10 +1,9 @@
 ﻿using CRAS.Application.Models;
 using CRAS.Application.Requests;
-using CRAS.Domain.Engine;
 using CRAS.Domain.Entities;
 using CRAS.Domain.Interfaces;
+using CRAS.Domain.Services;
 using CRAS.Infrastructure.Data;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
@@ -16,17 +15,11 @@ namespace CRAS.Api.Controllers;
 /// </summary>
 /// <param name="context"></param>
 /// <param name="riskEngine"></param>
-/// <param name="addInvoiceValidator"></param>
-/// <param name="addContractorValidator"></param>
-/// <param name="addFinancialStatementValidator"></param>
 [ApiController]
 [Route("api/[controller]")]
 public class ContractorsController(
     AppDbContext context,
-    IRiskEngine riskEngine,
-    IValidator<AddInvoiceRequest> addInvoiceValidator,
-    IValidator<AddContractorRequest> addContractorValidator,
-    IValidator<AddFinancialStatementRequest> addFinancialStatementValidator) : ControllerBase
+    IRiskEngine riskEngine) : ControllerBase
 {
     /// <summary>
     ///     Retrieves a list of all contractors, including their financial statements and invoices.
@@ -90,13 +83,6 @@ public class ContractorsController(
     [HttpPost]
     public async Task<IActionResult> AddContractor([FromBody] AddContractorRequest request)
     {
-        var validationResult = await addContractorValidator.ValidateAsync(request);
-
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(validationResult.Errors);
-        }
-
         var contractor = new Contractor
         {
             TaxId = request.TaxId
@@ -120,13 +106,6 @@ public class ContractorsController(
     public async Task<IActionResult> AddInvoice(Guid id, [FromBody] AddInvoiceRequest request)
     {
         request.ContractorId = id;
-
-        var validationResult = await addInvoiceValidator.ValidateAsync(request);
-
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(validationResult.Errors);
-        }
 
         var contractorExists = await context.Contractors.AnyAsync(c => c.Id == id);
 
@@ -163,13 +142,6 @@ public class ContractorsController(
     public async Task<IActionResult> AddFinancialStatement(Guid id, [FromBody] AddFinancialStatementRequest request)
     {
         request.ContractorId = id;
-
-        var validationResult = await addFinancialStatementValidator.ValidateAsync(request);
-
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(validationResult.Errors);
-        }
 
         var contractorExists = await context.Contractors.AnyAsync(c => c.Id == id);
 

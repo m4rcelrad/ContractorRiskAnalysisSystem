@@ -25,13 +25,13 @@ public class Contractor
     /// <summary>
     ///     Gets or sets the collection of financial statements associated with the contractor.
     /// </summary>
-    public ICollection<FinancialStatement> FinancialStatements { get; set; } =
+    public ICollection<FinancialStatement> FinancialStatements { get; init; } =
         new HashSet<FinancialStatement>();
 
     /// <summary>
     ///     Gets or sets the collection of invoices associated with this contractor.
     /// </summary>
-    public ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
+    public ICollection<Invoice> Invoices { get; init; } = new List<Invoice>();
 
     /// <summary>
     ///     Validates a Polish Tax Identification Number (NIP) using standard weights and checksum algorithms.

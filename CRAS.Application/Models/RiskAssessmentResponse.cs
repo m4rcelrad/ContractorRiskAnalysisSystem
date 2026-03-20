@@ -1,5 +1,5 @@
 ﻿using CRAS.Domain.Enums;
-using CRAS.Domain.Models;
+using CRAS.Domain.ValueObjects;
 
 namespace CRAS.Application.Models;
 

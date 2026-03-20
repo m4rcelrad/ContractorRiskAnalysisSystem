@@ -1,23 +1,28 @@
 ﻿using CRAS.Domain.Entities;
 using CRAS.Domain.Enums;
-using CRAS.Domain.Services;
+using CRAS.Domain.RiskModels;
 
 namespace CRAS.Tests.Domain.Services;
 
 /// <summary>
-///     Contains unit tests for the <see cref="AltmanZDoublePrimeModel" /> class.
+///     Contains unit tests for the <see cref="AltmanZScoreModel" /> class.
 /// </summary>
 /// <remarks>
-///     This suite ensures the variant model correctly assesses private, non-manufacturing entities.
-///     It verifies the modified constants, the exclusion of the sales ratio, and the shifted risk thresholds.
+///     This test suite verifies the accurate calculation of risk scores for public manufacturing companies.
+///     It covers mathematical edge cases (like division by zero) and validates the classification
+///     thresholds for Low, Moderate, and Critical zones.
 /// </remarks>
-public class AltmanZDoublePrimeModelTests
+public class AltmanZScoreModelTests
 {
-    private readonly AltmanZDoublePrimeModel _model = new();
+    private readonly AltmanZScoreModel _model = new();
 
     /// <summary>
     ///     Verifies that an <see cref="ArgumentException" /> is thrown when the total assets value is zero.
     /// </summary>
+    /// <remarks>
+    ///     This is a critical guard clause test to prevent <see cref="DivideByZeroException" />
+    ///     when calculating asset-based ratios like Working Capital to Total Assets.
+    /// </remarks>
     [Fact]
     public void CalculateRisk_ThrowsArgumentException_WhenTotalAssetsIsZero()
     {
@@ -38,45 +43,47 @@ public class AltmanZDoublePrimeModelTests
     }
 
     /// <summary>
-    ///     Verifies that the model correctly calculates a distress risk level and assigns the appropriate
-    ///     score when provided with poor financial indicators.
-    /// </summary>
-    [Fact]
-    public void CalculateRisk_ReturnsDistressRiskLevel_WhenFinancialsAreWeak()
-    {
-        var statement = CreateTestStatement(
-            100000m,
-            90000m,
-            -10000m,
-            -5000m,
-            -2000m,
-            10000m);
-
-        var result = _model.CalculateRisk(statement);
-
-        Assert.Equal("Altman Z''-Score", result.Model);
-        Assert.Equal(RiskLevel.Critical, result.RiskLevel);
-        Assert.True(result.Score < 1.10m);
-    }
-
-    /// <summary>
-    ///     Verifies that the model accurately assigns a safe status when the company exhibits strong equity and earnings.
+    ///     Verifies that the model correctly calculates a safe risk level when provided with strong financials.
     /// </summary>
     [Fact]
     public void CalculateRisk_ReturnsSafeRiskLevel_WhenFinancialsAreStrong()
     {
         var statement = CreateTestStatement(
             100000m,
+            40000m,
+            50000m,
+            30000m,
             20000m,
             60000m,
-            40000m,
-            25000m,
-            80000m);
+            120000m);
 
         var result = _model.CalculateRisk(statement);
 
+        Assert.Equal("Altman Z-Score", result.Model);
         Assert.Equal(RiskLevel.Low, result.RiskLevel);
-        Assert.True(result.Score > 2.60m);
+        Assert.True(result.Score > 2.99m);
+    }
+
+    /// <summary>
+    ///     Verifies that the model correctly assigns a distress risk level when financial ratios fall below the critical
+    ///     threshold.
+    /// </summary>
+    [Fact]
+    public void CalculateRisk_ReturnsDistressRiskLevel_WhenFinancialsAreWeak()
+    {
+        var statement = CreateTestStatement(
+            100000m,
+            150000m,
+            -20000m,
+            -10000m,
+            -5000m,
+            10000m,
+            50000m);
+
+        var result = _model.CalculateRisk(statement);
+
+        Assert.Equal(RiskLevel.Critical, result.RiskLevel);
+        Assert.True(result.Score < 1.81m);
     }
 
     /// <summary>
@@ -87,7 +94,8 @@ public class AltmanZDoublePrimeModelTests
     /// <param name="workingCapital"></param>
     /// <param name="retainedEarnings"></param>
     /// <param name="ebit"></param>
-    /// <param name="bookValueEquity"></param>
+    /// <param name="marketValueEquity"></param>
+    /// <param name="sales"></param>
     /// <returns>
     ///     <see cref="FinancialStatement" />
     /// </returns>
@@ -97,7 +105,8 @@ public class AltmanZDoublePrimeModelTests
         decimal workingCapital = 0m,
         decimal retainedEarnings = 0m,
         decimal ebit = 0m,
-        decimal bookValueEquity = 0m) => new()
+        decimal marketValueEquity = 0m,
+        decimal sales = 0m) => new()
     {
         ContractorId = Guid.NewGuid(),
         Year = DateTime.UtcNow.Year,
@@ -108,9 +117,9 @@ public class AltmanZDoublePrimeModelTests
         WorkingCapital = workingCapital,
         RetainedEarnings = retainedEarnings,
         EBIT = ebit,
-        MarketValueEquity = 0m,
-        BookValueEquity = bookValueEquity,
-        Sales = 0m,
+        MarketValueEquity = marketValueEquity,
+        BookValueEquity = 0m,
+        Sales = sales,
         NetIncome = 0m,
         PreviousNetIncome = 0m,
         FundsFromOperations = 0m,

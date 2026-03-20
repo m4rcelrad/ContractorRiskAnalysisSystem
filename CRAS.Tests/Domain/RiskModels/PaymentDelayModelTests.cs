@@ -1,7 +1,7 @@
 ﻿using CRAS.Domain.Entities;
 using CRAS.Domain.Enums;
 using CRAS.Domain.Interfaces;
-using CRAS.Domain.Services;
+using CRAS.Domain.RiskModels;
 using Moq;
 
 namespace CRAS.Tests.Domain.Services;

@@ -1,5 +1,5 @@
 ﻿using CRAS.Domain.Entities;
-using CRAS.Domain.Models;
+using CRAS.Domain.ValueObjects;
 using CRAS.Infrastructure.Reporting.Helpers;
 
 namespace CRAS.Infrastructure.Reporting.Core;

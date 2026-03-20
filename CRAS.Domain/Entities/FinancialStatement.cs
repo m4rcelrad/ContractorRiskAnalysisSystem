@@ -15,7 +15,7 @@ public class FinancialStatement
     /// <summary>
     ///     Gets or sets the identifier of the contractor associated with the financial statement.
     /// </summary>
-    public required Guid ContractorId { get; set; }
+    public required Guid ContractorId { get; init; }
 
     /// <summary>
     ///     Gets the fiscal year associated with the financial statement.
@@ -98,5 +98,5 @@ public class FinancialStatement
     ///     Gets the navigation property to the associated contractor.
     /// </summary>
     [JsonIgnore]
-    public Contractor Contractor { get; set; } = null!;
+    public Contractor Contractor { get; init; } = null!;
 }

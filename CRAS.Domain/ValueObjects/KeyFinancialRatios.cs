@@ -1,4 +1,4 @@
-﻿namespace CRAS.Domain.Models;
+﻿namespace CRAS.Domain.ValueObjects;
 
 /// <summary>
 ///     Represents a record containing key financial ratios.

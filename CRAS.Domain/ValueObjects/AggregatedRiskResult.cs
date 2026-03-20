@@ -1,6 +1,6 @@
 ﻿using CRAS.Domain.Enums;
 
-namespace CRAS.Domain.Models;
+namespace CRAS.Domain.ValueObjects;
 
 /// <summary>
 ///     Represents the final, consolidated outcome of applying multiple financial risk models.
