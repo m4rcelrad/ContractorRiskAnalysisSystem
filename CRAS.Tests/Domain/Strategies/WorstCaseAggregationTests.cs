@@ -1,6 +1,6 @@
 ﻿using CRAS.Domain.Enums;
-using CRAS.Domain.Models;
 using CRAS.Domain.Strategies;
+using CRAS.Domain.ValueObjects;
 
 namespace CRAS.Tests.Domain.Strategies;
 

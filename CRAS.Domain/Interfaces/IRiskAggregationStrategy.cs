@@ -1,4 +1,4 @@
-﻿using CRAS.Domain.Models;
+﻿using CRAS.Domain.ValueObjects;
 
 namespace CRAS.Domain.Interfaces;
 

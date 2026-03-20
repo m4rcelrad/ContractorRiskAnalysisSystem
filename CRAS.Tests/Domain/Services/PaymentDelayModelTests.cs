@@ -1,6 +1,7 @@
 ﻿using CRAS.Domain.Entities;
 using CRAS.Domain.Enums;
 using CRAS.Domain.Interfaces;
+using CRAS.Domain.RiskModels;
 using CRAS.Domain.Services;
 using Moq;
 

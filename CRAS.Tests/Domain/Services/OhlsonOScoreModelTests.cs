@@ -1,4 +1,5 @@
 ﻿using CRAS.Domain.Entities;
+using CRAS.Domain.RiskModels;
 using CRAS.Domain.Services;
 
 namespace CRAS.Tests.Domain.Services;

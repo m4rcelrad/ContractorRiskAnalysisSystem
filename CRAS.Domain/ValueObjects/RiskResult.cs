@@ -1,6 +1,6 @@
 ﻿using CRAS.Domain.Enums;
 
-namespace CRAS.Domain.Models;
+namespace CRAS.Domain.ValueObjects;
 
 /// <summary>
 ///     Encapsulates the outcome of a risk model evaluation.

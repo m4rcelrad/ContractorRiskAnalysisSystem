@@ -1,9 +1,9 @@
 ﻿using CRAS.Domain.Entities;
 using CRAS.Domain.Enums;
 using CRAS.Domain.Interfaces;
-using CRAS.Domain.Models;
+using CRAS.Domain.ValueObjects;
 
-namespace CRAS.Domain.Services;
+namespace CRAS.Domain.RiskModels;
 
 /// <summary>
 ///     Implements the Ohlson O-Score model.
