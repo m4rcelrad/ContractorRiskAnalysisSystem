@@ -1,0 +1,39 @@
+﻿services:
+  db:
+    image: postgres:latest
+    container_name: cras-db
+    environment:
+      POSTGRES_DB: CRAS
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d CRAS"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: CRAS.Api/Dockerfile
+    container_name: cras-api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=CRAS;Username=postgres;Password=mysecretpassword
+    ports:
+      - "5250:8080"
+
+  web:
+    build:
+      context: .
+      dockerfile: CRAS.Web/Dockerfile
+    container_name: cras-web
+    depends_on:
+      - api
+    ports:
+      - "5265:80"
