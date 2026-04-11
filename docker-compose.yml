@@ -5,7 +5,7 @@
     environment:
       POSTGRES_DB: CRAS
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: secretpassword
+      POSTGRES_PASSWORD: mysecretpassword
     ports:
       - "5432:5432"
     healthcheck:
@@ -24,7 +24,7 @@
         condition: service_healthy
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
-      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=CRAS;Username=postgres;Password=secretpassword
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=CRAS;Username=postgres;Password=mysecretpassword
     ports:
       - "5250:8080"
 
