@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Net.Sockets;
 using System.Text.Json.Serialization;
 using CRAS.Api.Filters;
 using CRAS.Application.Requests;
@@ -17,6 +18,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using QuestPDF;
 using QuestPDF.Infrastructure;
+using Npgsql;
 
 namespace CRAS.Api;
 
@@ -42,7 +44,15 @@ public static class Program
         });
 
         builder.Services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+        {
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                                   ?? throw new InvalidOperationException("Missing connection string: DefaultConnection");
+
+            options.UseNpgsql(connectionString, npgsqlOptions =>
+            {
+                npgsqlOptions.EnableRetryOnFailure(maxRetryCount: 5, maxRetryDelay: TimeSpan.FromSeconds(3), errorCodesToAdd: null);
+            });
+        });
 
         builder.Services.AddScoped<IRiskAggregationStrategy, MajorityVoteAggregation>();
         builder.Services.AddScoped<IRiskModel, AltmanZScoreModel>();
@@ -98,8 +108,43 @@ public static class Program
 
             using var scope = app.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var loggerFactory = scope.ServiceProvider.GetRequiredService<ILoggerFactory>();
+            var logger = loggerFactory.CreateLogger("Startup");
 
-            dbContext.Database.Migrate();
+            const int maxAttempts = 8;
+
+            for (var attempt = 1; attempt <= maxAttempts; attempt++)
+            {
+                try
+                {
+                    if (dbContext.Database.GetMigrations().Any())
+                    {
+                        dbContext.Database.Migrate();
+                    }
+                    else
+                    {
+                        logger.LogInformation("No EF migrations found. Recreating database schema using EnsureCreated().");
+                        dbContext.Database.EnsureDeleted();
+                        dbContext.Database.EnsureCreated();
+                    }
+
+                    break;
+                }
+                catch (Exception ex) when (ex is NpgsqlException || ex is SocketException)
+                {
+                    if (attempt == maxAttempts)
+                    {
+                        throw;
+                    }
+
+                    logger.LogWarning(ex,
+                        "Database is not reachable yet (attempt {Attempt}/{MaxAttempts}). Retrying in 2 seconds...",
+                        attempt, maxAttempts);
+
+                    Thread.Sleep(TimeSpan.FromSeconds(2));
+                }
+            }
+
             DataSeeder.Seed(dbContext);
         }
 
